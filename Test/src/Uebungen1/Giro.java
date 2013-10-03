@@ -1,3 +1,5 @@
+package Uebungen1;
+
 
 public class Giro extends Konto
 {
@@ -21,7 +23,7 @@ public class Giro extends Konto
     
     public void payOut(double value)
     {
-    	//Saldo überprüfen wenn er unter 0 ist dann muss auch die kredit Limite überprüft werden
+    	//Saldo ï¿½berprï¿½fen wenn er unter 0 ist dann muss auch die kredit Limite ï¿½berprï¿½ft werden
     	if(super.saldo < 0 )
     	{
     		//Wird die Abhebeung die Limite sprengen dann nicht abheben
