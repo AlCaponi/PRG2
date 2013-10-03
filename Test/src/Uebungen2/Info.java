@@ -10,4 +10,15 @@ package Uebungen2;
  */
 public class Info {
     
+    String name;
+    
+    public Info(String name)
+    {
+        this.name = name;
+    }
+    
+    public String getName()
+    {
+        return this.name;
+    }
 }

@@ -15,6 +15,7 @@ public class Ringbuffer {
     private ArrayList<Info> test;
     int head;
     int tail;
+    int size;
     int capacity;
 
     public Ringbuffer(int capacity) {
@@ -31,8 +32,8 @@ public class Ringbuffer {
         if (!isFull()) {
 
             test.add(head, x);
-
-            if (head == test.size()) {
+            size ++;
+            if (head == test.size()-1) {
                 head = 0;
             } else {
                 head++;
@@ -48,7 +49,9 @@ public class Ringbuffer {
 
 
             element = test.get(tail);
-            if (tail == test.size()) {
+            size --;
+            
+            if (tail == test.size()-1) {
                 tail = 0;
             } else {
                 tail++;
