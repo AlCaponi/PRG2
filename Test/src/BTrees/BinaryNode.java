@@ -12,6 +12,7 @@ class BinaryNode {
 
     private BinaryNode left;
     private BinaryNode right;
+    private BinaryNode parent;
     private String value;
     static Integer counter = 0;
     private Integer elementNumber = 0;
@@ -38,6 +39,7 @@ class BinaryNode {
      * @param left the left to set
      */
     public void setLeft(BinaryNode left) {
+        left.parent = this;
         this.left = left;
     }
 
@@ -52,6 +54,7 @@ class BinaryNode {
      * @param right the right to set
      */
     public void setRight(BinaryNode right) {
+        right.parent = this;
         this.right = right;
     }
 
@@ -137,13 +140,36 @@ class BinaryNode {
             if(left != null)
                 left.Insert(item);
             else
-                left = item;
+                setLeft(item);
         else
         {
             if(right != null)
                 right.Insert(item);
             else
-                right = item;
+                setRight(item);
         }
     }
+    
+    public int getOrdnung()
+    {
+        int ordnung = 0;
+        if(left != null)
+        {
+            ordnung ++;
+        }
+        if(right != null)
+        {
+            ordnung++;
+        }
+        return ordnung;
+    }
+
+    /**
+     * @return the parent
+     */
+    public BinaryNode getParent() {
+        return parent;
+    }
+    
+    
 }

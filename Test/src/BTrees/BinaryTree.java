@@ -24,4 +24,5 @@ public class BinaryTree {
     public BinaryNode search(int key) {
         return root.search(key);
     }
+    
 }
