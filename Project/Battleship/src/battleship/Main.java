@@ -12,6 +12,7 @@ public class Main {
 
     /**
      * @param args the command line arguments
+     * Todo: comment all the things!
      */
     public static void main(String[] args) {
         // TODO code application logic here
