@@ -6,7 +6,7 @@ package battleship;
 
 /**
  *
- * @author Simon
+ * @author Simon sadflksajdf
  */
 public class Main {
 
