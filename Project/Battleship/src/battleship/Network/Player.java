@@ -1,7 +1,6 @@
 package battleship.Network;
 
 import battleship.Engine.Game;
-import battleship.Network.IClient;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -25,7 +24,6 @@ public class Player implements IClient {
 	public ServerSocket getReceiver() {
 		return this.receiver;
 	}
-
 	/**
 	 * 
 	 * @param receiver

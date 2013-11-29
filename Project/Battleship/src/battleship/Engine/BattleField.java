@@ -1,6 +1,4 @@
 package battleship.Engine;
-
-
 import java.util.ArrayList;
 
 public class BattleField implements IBattleField {
