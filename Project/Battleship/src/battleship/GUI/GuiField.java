@@ -31,7 +31,7 @@ public class GuiField extends JButton {
         this.positionX = x;
         this.positionY = y;
         this.addActionListener(new FieldListener());
-        this.mode = eBattleFieldMode.Edit;
+        this.mode = eBattleFieldMode.Design;
 
     }
 
@@ -46,8 +46,9 @@ public class GuiField extends JButton {
      * @param mode the mode to set
      */
     public void setMode(eBattleFieldMode mode) {
-        UpdateLayout();
         this.mode = mode;
+        UpdateLayout();
+        
 
     }
 
@@ -93,7 +94,7 @@ public class GuiField extends JButton {
         public void actionPerformed(ActionEvent e) {
             if (mode == eBattleFieldMode.Playable) {
                 fieldGotHit();
-            } else if (mode == eBattleFieldMode.Edit) {
+            } else if (mode == eBattleFieldMode.Design) {
                 // call placeShip
             } else {
                 throw new UnsupportedOperationException("Field mustn't be enabled, worng mode");

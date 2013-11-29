@@ -71,7 +71,9 @@ public class PlayingWindow extends JFrame {
                     {
                         JButton buttonApplyShips = (JButton)e.getSource();
                         buttonApplyShips.setVisible(false);
-                        playerGrid.setMode(eBattleFieldMode.Playable);
+                        playerGrid.setMode(eBattleFieldMode.Displaying);
+                        oponentGrid.setMode(eBattleFieldMode.Playable);
+                        
                         Message ready = new Message();
                         ready.setMessageType(eMessageType.playerState);
                         ready.setDataContainer("I'm ready");
@@ -94,7 +96,7 @@ public class PlayingWindow extends JFrame {
         s.setStartPoint(new Coordinates(0,4));
         s.setOrientation(eOrientation.Vertical);
         
-                Ship s2 = new Ship(eShipType.aircraftcarrier);
+        Ship s2 = new Ship(eShipType.aircraftcarrier);
         s2.setStartPoint(new Coordinates(5,4));
         s2.setOrientation(eOrientation.Vertical);
         playerGrid.field.setShip(s);

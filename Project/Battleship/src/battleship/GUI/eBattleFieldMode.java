@@ -10,5 +10,5 @@ package battleship.GUI;
  */
 public enum eBattleFieldMode {
     
-    Edit,Playable,Displaying
+    Design,Playable,Displaying
 }

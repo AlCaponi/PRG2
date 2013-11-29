@@ -41,7 +41,7 @@ public class BattleFieldGrid extends JPanel {
             }
         }
         if (isPlayerGrid) {
-            setMode(eBattleFieldMode.Edit);
+            setMode(eBattleFieldMode.Design);
         } else {
             setMode(eBattleFieldMode.Displaying);
     
@@ -67,10 +67,7 @@ public class BattleFieldGrid extends JPanel {
      * @param mode the mode to set
      */
     public void setMode(eBattleFieldMode mode) {
-        // Gegner grid kann nur anzeigen
-        if (isPlayerGrid == false && mode != eBattleFieldMode.Displaying) {
-            return;
-        }
+
         this.mode = mode;
         
         for (GuiField g : displayedFields) {
