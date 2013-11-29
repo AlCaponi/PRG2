@@ -4,6 +4,9 @@
  */
 package battleship;
 
+import battleship.Engine.Game;
+import battleship.GUI.PlayingWindow;
+
 /**
  *
  * @author Simon sadflksajdf
@@ -16,5 +19,7 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Game game = new Game();
+        PlayingWindow wnd = new PlayingWindow(game);
     }
 }
