@@ -4,10 +4,16 @@
  */
 package battleship.GUI;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
@@ -19,35 +25,58 @@ import javax.swing.ListSelectionModel;
 public class Lobby extends JFrame
 {
     private JPanel pnlLobby;
-    private JList lstGames;
+    private JPanel pnlButtons;
+    private List lstGames;
+    private JButton btnCreateGame;
+    private JButton btnJoinGame;
     
     public Lobby()
     {
         //Window Settings
         super("Lobby");
-        setSize(500, 300);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         //Initialize Components
         InitializeComponents();
-        setVisible(true);
     }
 
     private void InitializeComponents() 
     {
-        pnlLobby = new JPanel();
-        pnlLobby.setBackground(Color.WHITE);
+        //Window Settings
+        setSize(500, 300);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
+        //Main Panel
+        pnlLobby = new JPanel(new GridLayout(1, 1));
+        pnlLobby.setBackground(Color.WHITE);  
         this.add(pnlLobby);
         
+        //List Games
+        String[] listData = { "I will ", "Own you ", "Masafackaaa", "!!!!!!!", "Biatch" };
+        lstGames = new List();
+        for(String s : listData)
+        {
+            lstGames.add(s);
+        }
+        lstGames.setSize(250, 250); 
+        pnlLobby.add(lstGames, BorderLayout.WEST);
         
-        lstGames = new JList();
-        lstGames.setSize(250, 300);
-        lstGames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        lstGames.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        lstGames.setVisibleRowCount(-1);
+        //ButtonPanel
+        pnlButtons = new JPanel();
+        pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout.Y_AXIS));
+        pnlLobby.add(pnlButtons, BorderLayout.EAST);
         
-                
-        this.add(lstGames);
+        //Button CreateGame
+        btnCreateGame = new JButton("Create Game");
+        btnCreateGame.setSize(50, 250);
+        pnlButtons.add(btnCreateGame, BorderLayout.EAST);
+        
+        //Button JoinGame
+        btnJoinGame = new JButton("Join Game");
+        btnCreateGame.setSize(50, 250);
+        pnlButtons.add(btnJoinGame, BorderLayout.EAST);
+        
+        //Set visibility
+        setVisible(true);
+        
     }
-
 }
