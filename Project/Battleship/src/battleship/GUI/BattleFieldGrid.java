@@ -47,6 +47,14 @@ public class BattleFieldGrid extends JPanel {
     
         }
     }
+    
+    public void UpdateLayout()
+    {
+        for(GuiField button :displayedFields)
+        {
+            button.UpdateLayout();
+        }
+    }
 
     /**
      * @return the mode

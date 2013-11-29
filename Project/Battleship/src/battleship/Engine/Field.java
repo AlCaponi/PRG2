@@ -2,6 +2,11 @@ package battleship.Engine;
 
 public class Field {
 
+    public Field()
+    {
+        setFieldState(eFieldState.Empty);
+    }
+    
     private Ship ship;
     private eFieldState fieldState;
     private eFieldBattleState battleState;
@@ -14,7 +19,7 @@ public class Field {
      *
      * @param fieldState
      */
-    public void setFieldState(eFieldState fieldState) {
+    public final void setFieldState(eFieldState fieldState) {
         this.fieldState = fieldState;
     }
 
@@ -40,7 +45,15 @@ public class Field {
     /**
      * @param ship the ship to set
      */
-    public void setShip(Ship ship) {
+    public final void setShip(Ship ship) {
         this.ship = ship;
+        if(ship != null)
+        {
+            setFieldState(eFieldState.Filled);
+            ship.setFieldReference(this);
+        }
+        else
+            setFieldState(eFieldState.Empty);
     }
+    
 }

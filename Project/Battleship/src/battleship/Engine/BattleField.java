@@ -1,12 +1,14 @@
 package battleship.Engine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class BattleField implements IBattleField {
     
     private int width = 10;
     private int heigth = 10;
-    private ArrayList<Ship> ships;
+    private HashSet<Ship> ships;
     private Field[][] fields;
     
     public BattleField(int width, int heigth) {
@@ -17,7 +19,7 @@ public class BattleField implements IBattleField {
             this.width = heigth;
         }
         
-        ships = new ArrayList<>();
+        ships = new HashSet<>();
         
         initFields();
         
@@ -36,7 +38,59 @@ public class BattleField implements IBattleField {
     
     @Override
     public boolean setShip(Ship shipToPlace) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       
+        boolean canPlace = canPlaceShip(shipToPlace);
+      
+        // add ship
+        if(canPlace)
+        {
+            // if already in list update 
+            Iterator<Ship> shipIterator = ships.iterator();
+            while(shipIterator.hasNext())
+            {
+                Ship old = shipIterator.next();
+                if(old.equals(shipToPlace))
+                {   
+                    ArrayList<Field> fields = old.getFields();
+                    for(Field f:fields)
+                    {
+                        f.setShip(null);
+                    }
+                    shipIterator.remove();
+                    break;
+                }
+            }
+            ships.add(shipToPlace);
+            buildFinalFieldList();
+        }
+        return canPlace;
+    }
+    
+    private boolean canPlaceShip(Ship shipToPlace)
+    {
+        boolean canPlace = true;
+          //1. check if its still in the field
+        if(shipToPlace.getOrientation() == eOrientation.Horizontal)
+        {
+            canPlace = shipToPlace.getStartPoint().getX()+shipToPlace.getSize() < width;
+        }
+        else
+        {
+            canPlace = shipToPlace.getStartPoint().getY()+shipToPlace.getSize() < heigth;
+        }
+        if(canPlace == false)
+            return canPlace;
+        // second check if there is no other ship
+        for(Ship otherShip:ships)
+        {
+            if(otherShip.Cross(shipToPlace))
+            {
+                canPlace = false;
+                break;
+            }
+        }
+        return canPlace;
+    
     }
     
     @Override
@@ -63,14 +117,15 @@ public class BattleField implements IBattleField {
     }
     
     private void buildFinalFieldList() {
+
         // set field values foreach ship which was placed
         for (Ship s : ships) {
-            for (int i = 0; i < s.getSize(); i++) {
-                if (s.getOrientation() == eOrientation.Horizontal) {
-                    getFields()[s.getX() + i][s.getY()].setShip(s);
-                } else {
-                    getFields()[s.getX()][s.getY() + i].setShip(s);
-                }
+
+            // Just call it once
+            ArrayList<Coordinates> coordinates =s.getCoordinates();
+            for(Coordinates c:coordinates)
+            {
+                getFields()[c.getX()][c.getY()].setShip(s);
             }
         }
     }

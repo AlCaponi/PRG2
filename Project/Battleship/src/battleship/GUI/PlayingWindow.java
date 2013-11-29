@@ -4,7 +4,11 @@
  */
 package battleship.GUI;
 
+import battleship.Engine.Coordinates;
 import battleship.Engine.Game;
+import battleship.Engine.Ship;
+import battleship.Engine.eOrientation;
+import battleship.Engine.eShipType;
 import battleship.Network.Message;
 import battleship.Network.eGameState;
 import battleship.Network.eMessageType;
@@ -14,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,6 +45,7 @@ public class PlayingWindow extends JFrame {
         buildPanels();
         gameSetup();
         setVisible(true);
+        testEdit();
     }
 
     private void buildPanels() {
@@ -82,6 +86,20 @@ public class PlayingWindow extends JFrame {
         centerPanel.add(oponentGrid);
         bottomPanel.add(buttonApplyShips);
         
+    }
+    
+    private void testEdit()
+    {
+        Ship s = new Ship(eShipType.aircraftcarrier);
+        s.setStartPoint(new Coordinates(0,4));
+        s.setOrientation(eOrientation.Vertical);
+        
+                Ship s2 = new Ship(eShipType.aircraftcarrier);
+        s2.setStartPoint(new Coordinates(5,4));
+        s2.setOrientation(eOrientation.Vertical);
+        playerGrid.field.setShip(s);
+        playerGrid.field.setShip(s2);
+        playerGrid.UpdateLayout();
     }
     
     class WindowListerner extends WindowAdapter

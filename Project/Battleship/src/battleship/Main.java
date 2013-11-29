@@ -21,5 +21,6 @@ public class Main {
         // TODO code application logic here
         Game game = new Game();
         PlayingWindow wnd = new PlayingWindow(game);
+       
     }
 }

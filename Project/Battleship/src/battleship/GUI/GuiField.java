@@ -6,6 +6,7 @@ package battleship.GUI;
 
 import battleship.Engine.BattleField;
 import battleship.Engine.Field;
+import battleship.Engine.eFieldState;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,20 +46,30 @@ public class GuiField extends JButton {
      * @param mode the mode to set
      */
     public void setMode(eBattleFieldMode mode) {
+        UpdateLayout();
+        this.mode = mode;
 
+    }
+
+    public void UpdateLayout() {
         // kann nicht mehr gesetzt werden
         if (field.getBattleState() != null) {
             return;
         }
-
-        if (mode != eBattleFieldMode.Displaying) {
-            setEnabled(true);
-        } // Gegner grid kann nur anzeigen
-        else {
+        // Gegner grid kann nur anzeigen
+        if (mode == eBattleFieldMode.Displaying) {
             setEnabled(false);
+            
+        } 
+        else {
+            
+            setEnabled(true);
+            // designMode
+            if(field.getFieldState() == eFieldState.Filled)
+            {
+                setBackground(Color.black);
+            }
         }
-        this.mode = mode;
-
     }
 
     private void fieldGotHit() {
@@ -70,7 +81,7 @@ public class GuiField extends JButton {
 
         } else {
             setBackground(Color.blue);
-            setText("Y");
+            setText("~");
         }
         setEnabled(false);
 
@@ -82,13 +93,9 @@ public class GuiField extends JButton {
         public void actionPerformed(ActionEvent e) {
             if (mode == eBattleFieldMode.Playable) {
                 fieldGotHit();
-            }
-            else if(mode == eBattleFieldMode.Edit)
-            {
+            } else if (mode == eBattleFieldMode.Edit) {
                 // call placeShip
-            }
-            else
-            {
+            } else {
                 throw new UnsupportedOperationException("Field mustn't be enabled, worng mode");
             }
         }
