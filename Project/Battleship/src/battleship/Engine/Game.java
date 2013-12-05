@@ -17,4 +17,18 @@ public class Game {
 		throw new UnsupportedOperationException();
 	}
 
+    /**
+     * @return the openent
+     */
+    public IClient getOpenent() {
+        return openent;
+    }
+
+    /**
+     * @return the player
+     */
+    public IClient getPlayer() {
+        return player;
+    }
+
 }

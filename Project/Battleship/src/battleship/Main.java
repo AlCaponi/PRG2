@@ -4,7 +4,8 @@
  */
 package battleship;
 
-import battleship.GUI.Lobby;
+import battleship.Engine.Game;
+import battleship.GUI.PlayingWindow;
 
 /**
  *
@@ -18,6 +19,8 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        battleship.GUI.Lobby lobby = new Lobby();
+        Game game = new Game();
+        PlayingWindow wnd = new PlayingWindow(game);
+       
     }
 }
