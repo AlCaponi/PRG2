@@ -8,6 +8,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.BoxLayout;
@@ -68,15 +70,21 @@ public class Lobby extends JFrame
         //Button CreateGame
         btnCreateGame = new JButton("Create Game");
         btnCreateGame.setSize(50, 250);
+        btnCreateGame.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){btnCreateGame_clicked(e);}});
         pnlButtons.add(btnCreateGame, BorderLayout.EAST);
         
         //Button JoinGame
         btnJoinGame = new JButton("Join Game");
-        btnCreateGame.setSize(50, 250);
+        btnJoinGame.setSize(50, 250);
         pnlButtons.add(btnJoinGame, BorderLayout.EAST);
         
         //Set visibility
         setVisible(true);
         
+    }
+    
+    public void btnCreateGame_clicked(ActionEvent e)
+    {
+        CreateGameDialog createGameDialog = new CreateGameDialog();
     }
 }
