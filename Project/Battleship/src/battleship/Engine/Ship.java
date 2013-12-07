@@ -18,6 +18,7 @@ public class Ship {
                 break;
             case battleship:
                 size = 4;
+                break;
             case destroyer:
                 size = 3;
                 break;
@@ -139,5 +140,19 @@ public class Ship {
      */
     public ArrayList<Field> getFields() {
         return fields;
+    }
+    
+  
+      /**
+     * @return if a ship is totally destroyed
+     */
+    public boolean shipDestroyed()
+    {
+        for(Field f:fields)
+        {
+            if(f.getBattleState()!= eFieldBattleState.Hit)
+                return false;
+        }
+        return true;
     }
 }

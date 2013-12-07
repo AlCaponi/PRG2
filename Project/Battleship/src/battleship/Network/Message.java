@@ -1,9 +1,9 @@
 package battleship.Network;
 
-public class Message {
+public class Message <T>{
 
 	private eMessageType messageType;
-	private Object dataContainer;
+	private T dataContainer;
 
 	public eMessageType getMessageType() {
 		return this.messageType;
@@ -17,7 +17,7 @@ public class Message {
 		this.messageType = messageType;
 	}
 
-	public Object getDataContainer() {
+	public T getDataContainer() {
 		return this.dataContainer;
 	}
 
@@ -25,7 +25,7 @@ public class Message {
 	 * 
 	 * @param dataContainer
 	 */
-	public void setDataContainer(Object dataContainer) {
+	public void setDataContainer(T dataContainer) {
 		this.dataContainer = dataContainer;
 	}
 

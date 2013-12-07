@@ -4,13 +4,16 @@
  */
 package battleship.GUI;
 
-import battleship.Engine.BattleField;
 import battleship.Engine.Field;
+import battleship.Engine.Game;
+import battleship.Engine.IBattleField;
+import battleship.Engine.eFieldBattleState;
 import battleship.Engine.eFieldState;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,14 +21,16 @@ import javax.swing.JButton;
  */
 public class GuiField extends JButton {
 
-    BattleField battleField;
+    IBattleField battleField;
+    Game game;
     int positionX;
     int positionY;
     private eBattleFieldMode mode;
     private Field field;
 
-    public GuiField(BattleField battleField, Field field, int x, int y) {
+    public GuiField(IBattleField battleField,Game game, Field field, int x, int y) {
         this.battleField = battleField;
+        this.game = game;
         this.field = field;
         this.positionX = x;
         this.positionX = x;
@@ -55,6 +60,7 @@ public class GuiField extends JButton {
     public void UpdateLayout() {
         // kann nicht mehr gesetzt werden
         if (field.getBattleState() != null) {
+            setBattleState();
             return;
         }
         // Gegner grid kann nur anzeigen
@@ -73,10 +79,9 @@ public class GuiField extends JButton {
         }
     }
 
-    private void fieldGotHit() {
-
-        boolean hit = battleField.hitField(positionX, positionY);
-        if (hit) {
+    private void setBattleState() {
+       
+        if (field.getBattleState() == eFieldBattleState.Hit) {
             setBackground(Color.red);
             setText("X");
 
@@ -87,15 +92,23 @@ public class GuiField extends JButton {
         setEnabled(false);
 
     }
+    
+    private void showMessage(String message)
+    {
+        JOptionPane.showMessageDialog(this.getParent(),message);
+    }
 
     class FieldListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             if (mode == eBattleFieldMode.Playable) {
-                fieldGotHit();
+                game.sendAttackRequest(positionX, positionY);
+
             } else if (mode == eBattleFieldMode.Design) {
-                // call placeShip
+                
+                if(game.placeCurrentShip()== false)
+                    showMessage("Ship couldn't be placed");
             } else {
                 throw new UnsupportedOperationException("Field mustn't be enabled, worng mode");
             }

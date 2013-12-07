@@ -8,6 +8,7 @@ public class Player implements IClient {
 
 	private Socket sender;
 	private ServerSocket receiver;
+        private Game game;
 
 	public Socket getSender() {
 		return this.sender;
@@ -39,7 +40,19 @@ public class Player implements IClient {
 
     @Override
     public void registerGame(Game game) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.game = game;
+        
+    }
+
+    private ePlayerState state;
+    @Override
+    public ePlayerState getState() {
+        return state;
+    }
+
+    @Override
+    public void setState(ePlayerState state) {
+        this.state = state;
     }
 
 }

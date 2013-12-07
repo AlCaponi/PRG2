@@ -19,15 +19,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
  *
  * @author Simon
  */
-public class PlayingWindow extends JFrame {
+public class PlayingWindow extends JFrame implements IGameGUI {
 
     JPanel leftPanel;
     JPanel rigthPanel;
@@ -39,6 +42,7 @@ public class PlayingWindow extends JFrame {
 
     public PlayingWindow(Game game) {
         this.game = game;
+        this.game.registerGUI(this);
         setLayout(new BorderLayout());
         setSize(600, 600);
 
@@ -51,9 +55,9 @@ public class PlayingWindow extends JFrame {
     private void buildPanels() {
         leftPanel = new JPanel(new GridLayout(0, 1));
         rigthPanel = new JPanel(new GridLayout(0, 1));
-        centerPanel = new JPanel(new GridLayout(0, 2,5,15));
+        centerPanel = new JPanel(new GridLayout(0, 2, 5, 15));
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new BoxLayout(bottomPanel,BoxLayout.Y_AXIS));
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         add(leftPanel, BorderLayout.WEST);
         add(rigthPanel, BorderLayout.EAST);
         add(centerPanel, BorderLayout.CENTER);
@@ -61,51 +65,124 @@ public class PlayingWindow extends JFrame {
     }
 
     private void gameSetup() {
-        playerGrid = new BattleFieldGrid(game,true);
+        playerGrid = new BattleFieldGrid(game, true);
         JButton buttonApplyShips = new JButton("Apply ship settings");
         buttonApplyShips.addActionListener(
-                new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        JButton buttonApplyShips = (JButton)e.getSource();
-                        buttonApplyShips.setVisible(false);
-                        playerGrid.setMode(eBattleFieldMode.Displaying);
-                        oponentGrid.setMode(eBattleFieldMode.Playable);
-                        
-                        Message ready = new Message();
-                        ready.setMessageType(eMessageType.playerState);
-                        ready.setDataContainer("I'm ready");
-                        //Openent is not set at the moment
-                        //game.getOpenent().sendMessage(ready);
-                        
-                    }
-                }
-                );
-        oponentGrid = new BattleFieldGrid(game,false);
+                new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton buttonApplyShips = (JButton) e.getSource();
+                buttonApplyShips.setVisible(false);
+
+                // to do check if all ships are placed
+                // player is ready
+                game.sendReadyRequest();
+
+            }
+        });
+        oponentGrid = new BattleFieldGrid(game, false);
         centerPanel.add(playerGrid);
         centerPanel.add(oponentGrid);
         bottomPanel.add(buttonApplyShips);
-        
+
     }
-    
-    private void testEdit()
-    {
+
+    /**
+     * this mehtod is used to set the mode of the gui
+     *
+     * @param state
+     */
+    @Override
+    public void updateState(eBattleFieldMode state) {
+
+        switch (state) {
+            case Design:
+                playerGrid.setMode(eBattleFieldMode.Playable);
+                oponentGrid.setMode(eBattleFieldMode.Displaying);
+                break;
+            // this means its players turn
+            case Playable:
+
+                playerGrid.setMode(eBattleFieldMode.Displaying);
+                oponentGrid.setMode(eBattleFieldMode.Playable);
+                break;
+            // this means player has to wait
+            case Displaying:
+
+                playerGrid.setMode(eBattleFieldMode.Displaying);
+                oponentGrid.setMode(eBattleFieldMode.Displaying);
+                break;
+        }
+        // update gui
+        playerGrid.UpdateLayout();
+        oponentGrid.UpdateLayout();
+    }
+
+    /**
+     *
+     * @param state
+     */
+    @Override
+    public void updateGameState(eGameState state) {
+        switch (state) {
+            case abort:
+                JOptionPane.showMessageDialog(this.getParent(), "Oponent left the current game");
+                break;
+            case won:
+                JOptionPane.showMessageDialog(this.getParent(), "Well done");
+                break;
+            case lost:
+                //ImageIcon  yoda = new ImageIcon ("lost.jpg");                
+                //,JOptionPane.ERROR_MESSAGE,(Icon)yoda
+                JOptionPane.showMessageDialog(this.getParent(), "Noch viel zu lernen du hast junger Padavan!");
+                break;
+        }
+
+
+    }
+
+    @Override
+    public void addChatMessage(String message) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void testEdit() {
         Ship s = new Ship(eShipType.aircraftcarrier);
-        s.setStartPoint(new Coordinates(0,4));
+        s.setStartPoint(new Coordinates(0, 0));
         s.setOrientation(eOrientation.Vertical);
-        
-        Ship s2 = new Ship(eShipType.aircraftcarrier);
-        s2.setStartPoint(new Coordinates(5,4));
+
+        Ship s2 = new Ship(eShipType.battleship);
+        s2.setStartPoint(new Coordinates(5, 4));
         s2.setOrientation(eOrientation.Vertical);
-        playerGrid.field.setShip(s);
-        playerGrid.field.setShip(s2);
+
+        Ship s3 = new Ship(eShipType.destroyer);
+        s3.setStartPoint(new Coordinates(6, 2));
+        s3.setOrientation(eOrientation.Vertical);
+
+        Ship s4 = new Ship(eShipType.patrolboat);
+        s4.setStartPoint(new Coordinates(3, 6));
+        s4.setOrientation(eOrientation.Vertical);
+
+        Ship s5 = new Ship(eShipType.submarine);
+        s5.setStartPoint(new Coordinates(5, 8));
+        s5.setOrientation(eOrientation.Horizontal);
+        game.setShipToPlace(s);
+        game.placeCurrentShip();
+        game.setShipToPlace(s2);
+        game.placeCurrentShip();
+        game.setShipToPlace(s3);
+        game.placeCurrentShip();
+        game.setShipToPlace(s4);
+        game.placeCurrentShip();
+        game.setShipToPlace(s5);
+        game.placeCurrentShip();
+
+
         playerGrid.UpdateLayout();
     }
-    
-    class WindowListerner extends WindowAdapter
-    {
+
+    class WindowListerner extends WindowAdapter {
+
         @Override
         public void windowClosed(WindowEvent e) {
             Message abortMessage = new Message();

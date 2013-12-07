@@ -15,5 +15,17 @@ public interface IClient {
 	 * @param game
 	 */
 	void registerGame(Game game);
+        
+        /**
+         * uset to get the state of the oponent
+         * @return 
+         */
+        ePlayerState getState();
+        
+        /**
+         *  used to store the state of the oponent
+         * @param state 
+         */
+        void setState(ePlayerState state);
 
 }

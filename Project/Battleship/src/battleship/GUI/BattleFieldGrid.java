@@ -6,6 +6,7 @@ package battleship.GUI;
 
 import battleship.Engine.BattleField;
 import battleship.Engine.Game;
+import battleship.Engine.IBattleField;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import javax.swing.JPanel;
@@ -17,7 +18,7 @@ import javax.swing.JPanel;
 public class BattleFieldGrid extends JPanel {
     
     Game game;
-    BattleField field;
+    IBattleField field;
     private eBattleFieldMode mode;
     private boolean isPlayerGrid;
     ArrayList<GuiField> displayedFields;
@@ -27,15 +28,18 @@ public class BattleFieldGrid extends JPanel {
         this.isPlayerGrid = isPlayerGrid;
         
         displayedFields = new ArrayList<>();
-        field = new BattleField(10, 10);
-        setLayout(new GridLayout(10, 10));
+        if(isPlayerGrid)
+            field = game.getPlayerGrid();
+        else
+            field = game.getOpenentGrid();
+        setLayout(new GridLayout(field.getWidth(), field.getHeigth()));
         buildField();
     }
     
     private void buildField() {
         for (int i = 0; i < field.getWidth(); i++) {
             for (int j = 0; j < field.getHeigth(); j++) {
-                GuiField displayField = new GuiField(this.field, field.getFields()[i][j], i, j);
+                GuiField displayField = new GuiField(this.field, game, field.getFields()[i][j], j, i);
                 add(displayField);
                 displayedFields.add(displayField);
             }

@@ -1,0 +1,18 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package battleship.GUI;
+
+import battleship.Network.eGameState;
+
+/**
+ *
+ * @author Simon
+ */
+public interface IGameGUI {
+    void updateState(eBattleFieldMode state);
+    
+    void updateGameState(eGameState state);
+    void addChatMessage(String message);
+}

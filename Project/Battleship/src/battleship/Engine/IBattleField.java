@@ -1,23 +1,41 @@
 package battleship.Engine;
 
-
 public interface IBattleField {
 
-	/**
-	 * 
-	 * @param shipToPlace
-	 */
-	boolean setShip(Ship shipToPlace);
+    /**
+     *
+     * @param shipToPlace
+     */
+    boolean setShip(Ship shipToPlace);
 
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 */
-	boolean hitField(int x, int y);
+    /**
+     * Request erhaltent
+     *
+     * @param x
+     * @param y
+     */
+    boolean hitField(int x, int y);
 
-	double getHitCount();
+    /**
+     * Response von gegener anzeigen
+     *
+     * @param x
+     * @param y
+     */
+    void setFieldState(boolean hit, int x, int y);
 
-	void applyShipPositions();
+    /**
+     * gets porcent of the totally hit ships
+     *
+     * @return
+     */
+    int getHitCount();
 
+    int getWidth();
+
+    int getHeigth();
+
+    Field[][] getFields();
+
+    void applyShipPositions();
 }
