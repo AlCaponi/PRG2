@@ -5,6 +5,7 @@
 package battleship;
 
 import battleship.Engine.Game;
+import battleship.GUI.Lobby;
 import battleship.GUI.PlayingWindow;
 
 /**
@@ -19,8 +20,10 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Game game = new Game();
-        PlayingWindow wnd = new PlayingWindow(game);
+        Lobby lobby = new Lobby();
+        
+        //Game game = new Game();
+        //PlayingWindow wnd = new PlayingWindow(game);
        
     }
 }
