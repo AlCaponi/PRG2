@@ -293,7 +293,7 @@ public class Player extends Thread implements IClient {
     private ePlayerState state;
     
     @Override
-    public ePlayerState getState() {
+    public ePlayerState getPlayerState() {
         return state;
     }
 
