@@ -18,12 +18,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.HashSet;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -39,6 +37,7 @@ public class Lobby extends JFrame
     private JButton btnCreateGame;
     private JButton btnJoinGame;
     private JButton btnRefresh;
+    private JButton btnRefreshIP;
     private JButton btnJoinGameAI;
     private JButton btnJoinGameIP;
     private ArrayList<GameInfo> gameList;
@@ -161,7 +160,18 @@ public class Lobby extends JFrame
             }
         });
         pnlButtons.add(btnRefresh, BorderLayout.SOUTH);
-                
+        
+        // Button Refresh List IP
+        btnRefreshIP = new JButton("Refresh List using IP Test");
+        btnRefreshIP.setSize(50, 250);
+        btnRefreshIP.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PerformIPTest();
+            }
+        });
+        pnlButtons.add(btnRefreshIP, BorderLayout.SOUTH);
+        
         //Set visibility
         setVisible(true);
         
@@ -198,6 +208,15 @@ public class Lobby extends JFrame
         responseServer.startServerBroadcast(); 
     }
     
+    public void PerformIPTest()
+    {
+        if(!responseServer.running) {
+            gameList.clear();
+            UpdateGameList();
+        }
+        responseServer.startServerIPTest();
+    }
+    
     public void JoinGame(InetAddress adr)
     {
         Player player = new Player();
@@ -232,5 +251,6 @@ public class Lobby extends JFrame
         btnRefresh.setEnabled(enable);
         btnJoinGameAI.setEnabled(enable);
         btnJoinGameIP.setEnabled(enable);
+        btnRefreshIP.setEnabled(enable);
     }
 }
