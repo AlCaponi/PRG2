@@ -134,12 +134,15 @@ public class Player extends Thread implements IClient {
                     
                     if(ishost == true) {
                         if(waitforclient == true) {
+                 
                             connectionSocket = serverSocket.accept();
-                            writeObject = new ReadObject(connectionSocket, game);
                             
                             //Startgame
                             lobby.StartGame(this);
 
+                            writeObject = new ReadObject(connectionSocket, game);
+                            
+                 
                             /*inReader = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                             outStream = new DataOutputStream(connectionSocket.getOutputStream());*/
                             System.out.println("Client connection accepted from: "+connectionSocket.getInetAddress());

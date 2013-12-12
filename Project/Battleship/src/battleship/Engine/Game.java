@@ -182,7 +182,7 @@ public class Game {
     private boolean startGame() {
         //To do Decide who is starting
         // in case of ai openent I'm starting
-        if (playerIsReady && (oponent.getPlayerState() != ePlayerState.Ready)) {
+        if (playerIsReady && (oponent.getPlayerState() == ePlayerState.Ready)) {
             
             if (oponent instanceof AI) {
                 if (gui != null) {
@@ -196,9 +196,6 @@ public class Game {
                 if(p.isHost()) {
                     if(gui != null) {
                         gui.updateState(eBattleFieldMode.Playable);
-                    }
-                    else {
-                        sendPlayerState(ePlayerState.TurnSwitch);
                     }
                 }
             }
