@@ -137,7 +137,7 @@ public class AI implements IClient {
     }
 
     @Override
-    public ePlayerState getState() {
+    public ePlayerState getPlayerState() {
         return state;
     }
 

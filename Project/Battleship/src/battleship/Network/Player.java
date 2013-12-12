@@ -13,7 +13,7 @@ import java.net.Socket;
 public class Player extends Thread implements IClient {
         private boolean running, ishost, playing, opponentready, waitforclient;
         private boolean isHit = true;
-        private int port;
+        private int port = 45678;
         private Thread thread;
 
         private ServerSocket serverSocket;
@@ -29,9 +29,8 @@ public class Player extends Thread implements IClient {
 
         private Game game;
 
-        public Player(int port)
-        {
-            this.port = port;
+        public Player()
+        {            
             ishost = false;
         }
 	public Socket getSender() {
