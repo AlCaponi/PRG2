@@ -101,8 +101,7 @@ public class Lobby extends JFrame
             }
         });
         pnlButtons.add(btnRefresh, BorderLayout.SOUTH);
-        
-        
+                
         //Set visibility
         setVisible(true);
         
