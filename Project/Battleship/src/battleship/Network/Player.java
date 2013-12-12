@@ -34,13 +34,14 @@ public class Player extends Thread implements IClient {
 
     private Lobby lobby;
 
-    public Player()
-    {            
-        ishost = false;
-    }
-    public Socket getSender() {
-            return clientSocket;
-    }
+        public Player()
+        {            
+            ishost = false;
+            start();
+        }
+	public Socket getSender() {
+		return clientSocket;
+	}
 
     public void start() {
         thread = new Thread(this);
