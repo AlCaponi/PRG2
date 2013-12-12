@@ -13,8 +13,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Player extends Thread implements IClient {
-    private boolean running, ishost, playing, opponentready, waitforclient;
+    private boolean running, playing, opponentready, waitforclient;
     private boolean isHit = true;
+    private boolean ishost = false;
     private boolean isClient = false;
     private int port = 45678;
     private Thread thread;    
