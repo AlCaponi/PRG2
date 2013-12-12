@@ -181,7 +181,7 @@ public class Game {
     private boolean startGame() {
         //To do Decide who is starting
         // in case of ai openent I'm starting
-        if (playerIsReady && oponent.getState() == ePlayerState.Ready) {
+        if (playerIsReady && oponent.getPlayerState() == ePlayerState.Ready) {
             if (oponent instanceof AI) {
                 if (gui != null) {
                     gui.updateState(eBattleFieldMode.Playable);
