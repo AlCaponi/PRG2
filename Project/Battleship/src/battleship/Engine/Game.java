@@ -182,7 +182,7 @@ public class Game {
     private boolean startGame() {
         //To do Decide who is starting
         // in case of ai openent I'm starting
-        if (playerIsReady) {
+        if (playerIsReady && (oponent.getPlayerState() != ePlayerState.Ready)) {
             
             if (oponent instanceof AI) {
                 if (gui != null) {
@@ -192,13 +192,6 @@ public class Game {
                 }
             } else {
                 // to check if this is the host else send a switch turn
-                while(oponent.getPlayerState() != ePlayerState.Ready) {
-                    try {
-                        Thread.sleep(100);
-                    } catch(Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
                 Player p = (Player)oponent;
                 if(p.isHost()) {
                     if(gui != null) {
