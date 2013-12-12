@@ -103,6 +103,7 @@ public class Player extends Thread implements IClient {
     }
 
     public void disconnect() throws IOException {
+        running = false;
         if(ishost == true) {
             serverSocket.close();
         } else {
