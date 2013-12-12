@@ -9,8 +9,14 @@ import battleship.Engine.Game;
 import battleship.Engine.Ship;
 import battleship.Engine.eOrientation;
 import battleship.Engine.eShipType;
+import static battleship.GUI.eBattleFieldMode.Design;
+import static battleship.GUI.eBattleFieldMode.Displaying;
+import static battleship.GUI.eBattleFieldMode.Playable;
 import battleship.Network.Message;
 import battleship.Network.eGameState;
+import static battleship.Network.eGameState.abort;
+import static battleship.Network.eGameState.lost;
+import static battleship.Network.eGameState.won;
 import battleship.Network.eMessageType;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -28,9 +34,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 import javax.swing.JRadioButton;
+
+import javax.swing.JTextField;
+
 
 /**
  *
@@ -45,6 +56,10 @@ public class PlayingWindow extends JFrame implements IGameGUI {
     BattleFieldGrid playerGrid;
     BattleFieldGrid oponentGrid;
     JComboBox cmbAvailableShips;
+
+    JTextField chatInput;
+    JList chatOutput;
+
     Game game;
     JRadioButton rdbHorizontal;
     JRadioButton rdbVertical;
@@ -145,11 +160,28 @@ public class PlayingWindow extends JFrame implements IGameGUI {
         
         leftPanel.add(rdbHorizontal);
         leftPanel.add(rdbVertical);
+        JButton buttonChat = new JButton("Send");
+        buttonChat.addActionListener(
+                new ActionListener() {
 
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.sendChatMessage(chatInput.getText());
+                chatInput.setText("");  
+                
+            }
+        }
+                );
+        chatOutput = new JList();
+        chatInput = new JTextField();
         oponentGrid = new BattleFieldGrid(game, false);
         centerPanel.add(playerGrid);
         centerPanel.add(oponentGrid);
         bottomPanel.add(buttonApplyShips);
+
+        bottomPanel.add(chatOutput);
+        bottomPanel.add(chatInput);
+        bottomPanel.add(buttonChat);
         bottomPanel.add(btnResetShips);
     }
     
@@ -169,6 +201,8 @@ public class PlayingWindow extends JFrame implements IGameGUI {
     private void rdbVertical_checkedChanged(ActionEvent e)
     {
         this.game.getShipToPlace().setOrientation(eOrientation.Vertical);
+
+
     }
 
     /**
