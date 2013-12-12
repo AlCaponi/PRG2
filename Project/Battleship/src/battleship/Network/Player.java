@@ -30,7 +30,8 @@ public class Player extends Thread implements IClient {
         
         private Socket connectionSocket;
 
-        private Game game;
+        private Game game;        
+        
     private Lobby lobby;
 
         public Player()
@@ -121,7 +122,7 @@ public class Player extends Thread implements IClient {
                                 objectWriter = new ObjectOutputStream(connectionSocket.getOutputStream());
                                 
                                 //Startgame
-                                lobby
+                                lobby.StartGame(this);
                                 
                               /*  inReader = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                                 outStream = new DataOutputStream(connectionSocket.getOutputStream());*/
