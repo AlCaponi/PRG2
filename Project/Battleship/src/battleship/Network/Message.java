@@ -1,6 +1,6 @@
 package battleship.Network;
 
-public class Message <T>{
+public class Message <T> implements java.io.Serializable{
 
 	private eMessageType messageType;
 	private T dataContainer;
