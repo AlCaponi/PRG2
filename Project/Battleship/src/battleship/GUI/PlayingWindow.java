@@ -23,8 +23,10 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  *
@@ -38,6 +40,9 @@ public class PlayingWindow extends JFrame implements IGameGUI {
     JPanel bottomPanel;
     BattleFieldGrid playerGrid;
     BattleFieldGrid oponentGrid;
+    JTextField chatInput;
+    JList chatOutput;
+    
     Game game;
 
     public PlayingWindow(Game game) {
@@ -80,10 +85,27 @@ public class PlayingWindow extends JFrame implements IGameGUI {
 
             }
         });
+        JButton buttonChat = new JButton("Send");
+        buttonChat.addActionListener(
+                new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.sendChatMessage(chatInput.getText());
+                chatInput.setText("");  
+                
+            }
+        }
+                );
+        chatOutput = new JList();
+        chatInput = new JTextField();
         oponentGrid = new BattleFieldGrid(game, false);
         centerPanel.add(playerGrid);
         centerPanel.add(oponentGrid);
         bottomPanel.add(buttonApplyShips);
+        bottomPanel.add(chatOutput);
+        bottomPanel.add(chatInput);
+        bottomPanel.add(buttonChat);
 
     }
 
