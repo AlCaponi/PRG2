@@ -48,4 +48,26 @@ public class Coordinates {
         }
         this.y = y;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj)
+        {
+            return true;
+        }
+        if(obj != null)
+        {
+            if(obj instanceof Coordinates)
+            {
+                Coordinates otherCoordinates = (Coordinates)obj;
+                if(otherCoordinates.getX() == this.getX() && otherCoordinates.getY() == this.getY())
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+  
 }

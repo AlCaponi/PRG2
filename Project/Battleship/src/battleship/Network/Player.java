@@ -30,12 +30,14 @@ public class Player extends Thread implements IClient {
     private ObjectInputStream objectReader;
     private ObjectOutputStream objectWriter;
     private Object tmp;
-
+    private ReadObject writeObject;
+    
     private Socket connectionSocket;
 
     private Game game;        
 
     private Lobby lobby;
+
 
         public Player()
         {            
@@ -48,7 +50,7 @@ public class Player extends Thread implements IClient {
 
     public void start() {
         thread = new Thread(this);
-        thread.start();
+        thread.start();        
         running = true;
         playing = false;
         System.out.println("TCP Thread started");
@@ -115,6 +117,8 @@ public class Player extends Thread implements IClient {
         playing = false;
         opponentready = false;
     }
+    
+    
 
     public void run() {
         try {
@@ -122,18 +126,17 @@ public class Player extends Thread implements IClient {
                 Thread.sleep(10);
                 if(playing == true) {
                     if (isClient == true){
-                            objectReader = new ObjectInputStream(clientSocket.getInputStream());
-                            objectWriter = new ObjectOutputStream(clientSocket.getOutputStream());
+                            writeObject = new ReadObject(clientSocket, game);
                             isClient = false;
+                            System.out.println("is Client");   
+                            running = false;
                     }
                     
                     if(ishost == true) {
                         if(waitforclient == true) {
                             connectionSocket = serverSocket.accept();
+                            writeObject = new ReadObject(connectionSocket, game);
                             
-                            objectReader = new ObjectInputStream(connectionSocket.getInputStream());
-                            objectWriter = new ObjectOutputStream(connectionSocket.getOutputStream());
-
                             //Startgame
                             lobby.StartGame(this);
 
@@ -141,18 +144,19 @@ public class Player extends Thread implements IClient {
                             outStream = new DataOutputStream(connectionSocket.getOutputStream());*/
                             System.out.println("Client connection accepted from: "+connectionSocket.getInetAddress());
                             waitforclient = false;
+                            running = false;
                         }
-                        try {                            
+ /*                       try {                            
                             tmp = objectReader.readObject();
                         }
                         catch(Exception e){ 
                             System.out.println("Exception: run is host " + e.getMessage());
                         }
                         Message message = (Message)tmp;
-                        game.handleOponentMessage(message);
+                        game.handleOponentMessage(message);*/
                         /*String receiveData = inReader.readLine();
                         process(receiveData);*/
-                    } else {
+                    /*} else {
                         try {
                             tmp = objectReader.readObject();
                         }
@@ -160,11 +164,11 @@ public class Player extends Thread implements IClient {
                             System.out.println("Exception: run is client" + e.getMessage());
                         }
                         Message message = (Message)tmp;
-                        game.handleOponentMessage(message);
+                        game.handleOponentMessage(message);*/
                     }
                 }
             }
-            disconnect();
+           // disconnect();
         } catch(InterruptedException | IOException ex) {
             System.out.println("TCPNetwork Exception: "+ex.getMessage());
         }
@@ -295,8 +299,13 @@ public class Player extends Thread implements IClient {
     @Override
     public void sendMessage(Message message) {
         try {
+            if (ishost){
+                objectWriter = new ObjectOutputStream(connectionSocket.getOutputStream());
+            } else {
+                objectWriter = new ObjectOutputStream(clientSocket.getOutputStream());
+            }
             objectWriter.writeObject(message);
-            objectWriter.flush();
+            objectWriter.flush();            
         }
         catch (Exception e){
             System.out.println("Exception: sendMessage " + e.getMessage());

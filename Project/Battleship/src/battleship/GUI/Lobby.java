@@ -186,11 +186,11 @@ public class Lobby extends JFrame
                     JoinGame(adr);
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
-                }
+    }
             }
         });
         pnlButtons.add(btnJoinGameIP, BorderLayout.EAST);
-        
+    
         // Button Start Game with AI
         btnJoinGameAI = new JButton("Start Game with AI");
         btnJoinGameAI.setSize(50, 250);
