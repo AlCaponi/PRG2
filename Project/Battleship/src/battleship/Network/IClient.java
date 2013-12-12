@@ -20,7 +20,9 @@ public interface IClient {
          * uset to get the state of the oponent
          * @return 
          */
-        ePlayerState getState();
+        
+        
+        ePlayerState getPlayerState();
         
         /**
          *  used to store the state of the oponent
