@@ -1,6 +1,7 @@
 package battleship.Network;
 
 import battleship.Engine.Game;
+import battleship.GUI.Lobby;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,7 +17,8 @@ public class Player extends Thread implements IClient {
         private boolean isHit = true;
         private int port = 45678;
         private Thread thread;
-
+        private InetAddress ipAddress;
+        
         private ServerSocket serverSocket;
         private Socket clientSocket;
 
@@ -29,6 +31,7 @@ public class Player extends Thread implements IClient {
         private Socket connectionSocket;
 
         private Game game;
+    private Lobby lobby;
 
         public Player()
         {            
@@ -54,7 +57,8 @@ public class Player extends Thread implements IClient {
             return opponentready;
         }
         
-        public boolean host() {
+        public boolean host(Lobby alobby) {
+            this.lobby = alobby;
             waitforclient = true;
             ishost = true;
             try {
@@ -89,6 +93,10 @@ public class Player extends Thread implements IClient {
             return true;
         }
         
+        public InetAddress getInetAddress(){
+            return ipAddress;
+        }
+        
         public void disconnect() throws IOException {
             if(ishost == true) {
                 serverSocket.close();
@@ -112,6 +120,8 @@ public class Player extends Thread implements IClient {
                                 objectReader = new ObjectInputStream(connectionSocket.getInputStream());
                                 objectWriter = new ObjectOutputStream(connectionSocket.getOutputStream());
                                 
+                                //Startgame
+                                lobby
                                 
                               /*  inReader = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                                 outStream = new DataOutputStream(connectionSocket.getOutputStream());*/
