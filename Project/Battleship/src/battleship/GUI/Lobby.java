@@ -39,9 +39,13 @@ public class Lobby extends JFrame
     private JButton btnCreateGame;
     private JButton btnJoinGame;
     private JButton btnRefresh;
+    private JButton btnJoinGameAI;
+    private JButton btnJoinGameIP;
     private ArrayList<GameInfo> gameList;
     private UDPServer broadcastServer;
     private UDPServer responseServer;
+    private boolean waitMode;
+    private Player player;
     
     public Lobby()
     {
@@ -78,14 +82,23 @@ public class Lobby extends JFrame
         pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout.Y_AXIS));
         pnlLobby.add(pnlButtons, BorderLayout.EAST);
         
-        //Button CreateGame
+        //Button CreateGame / Cancel
         btnCreateGame = new JButton("Create Game");
         btnCreateGame.setSize(50, 250);
         btnCreateGame.addActionListener(new ActionListener(){ 
             @Override
             public void actionPerformed(ActionEvent e){
-                String gameName = JOptionPane.showInputDialog("New Game Name:");
-                StartGameServer(gameName);
+                if(waitMode) {
+                    try {
+                        player.disconnect();
+                    } catch(Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    SetGUIMode(true);
+                }
+                else {
+                    HostGame();
+                }
             }
         });
         pnlButtons.add(btnCreateGame, BorderLayout.EAST);
@@ -109,9 +122,9 @@ public class Lobby extends JFrame
         pnlButtons.add(btnJoinGame, BorderLayout.EAST);
         
         // Button Join Game Through IP
-        btnJoinGame = new JButton("Join Game Through IP");
-        btnJoinGame.setSize(50, 250);
-        btnJoinGame.addActionListener(new ActionListener() {
+        btnJoinGameIP = new JButton("Join Game Through IP");
+        btnJoinGameIP.setSize(50, 250);
+        btnJoinGameIP.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String ip = JOptionPane.showInputDialog("Enter remote IP:");
@@ -123,19 +136,19 @@ public class Lobby extends JFrame
                 }
             }
         });
-        pnlButtons.add(btnJoinGame, BorderLayout.EAST);
+        pnlButtons.add(btnJoinGameIP, BorderLayout.EAST);
         
         // Button Start Game with AI
-        btnJoinGame = new JButton("Start Game with AI");
-        btnJoinGame.setSize(50, 250);
-        btnJoinGame.addActionListener(new ActionListener() {
+        btnJoinGameAI = new JButton("Start Game with AI");
+        btnJoinGameAI.setSize(50, 250);
+        btnJoinGameAI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 IClient oponent = new AI();
                 StartGame(oponent);
             }
         });
-        pnlButtons.add(btnJoinGame, BorderLayout.EAST);
+        pnlButtons.add(btnJoinGameAI, BorderLayout.EAST);
         
         
         // Button Refresh List
@@ -197,5 +210,27 @@ public class Lobby extends JFrame
         Game game = new Game(oponent);
         oponent.registerGame(game);
         PlayingWindow playingWindow = new PlayingWindow(game);
+    }
+    
+    public void HostGame()
+    {
+        String gameName = JOptionPane.showInputDialog("New Game Name:");
+        StartGameServer(gameName);
+        player = new Player();
+        player.host(this);
+        SetGUIMode(false);
+    }
+    
+    public void SetGUIMode(boolean enable)
+    {
+        waitMode = !enable;
+        if(waitMode)
+            btnCreateGame.setText("Cancel");
+        else
+            btnCreateGame.setText("Create Game");
+        btnJoinGame.setEnabled(enable);
+        btnRefresh.setEnabled(enable);
+        btnJoinGameAI.setEnabled(enable);
+        btnJoinGameIP.setEnabled(enable);
     }
 }
