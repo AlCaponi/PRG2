@@ -76,23 +76,11 @@ public class CreateGameDialog extends JDialog
         //Buttongroup ModeGroup
         btgMode = new ButtonGroup();
         
-        //Radibutton IP Mode
-        rdbIPMode = new JRadioButton();
-        rdbIPMode.setText("IP Mode:");
-        btgMode.add(rdbIPMode);
-        pnlGameMode.add(rdbIPMode);
-       
         //Radiobutton Host Mode
         rdbHostMode = new JRadioButton();
         rdbHostMode.setText("Host Mode:");
         btgMode.add(rdbHostMode);
         pnlGameMode.add(rdbHostMode);
-        
-        //Radiobutton AI Mode
-        rdbAIMode = new JRadioButton();
-        rdbAIMode.setText("AI Mode:");
-        btgMode.add(rdbAIMode);
-        pnlGameMode.add(rdbAIMode);
         
         // Button OK
         okBtn = new JButton();
@@ -103,11 +91,6 @@ public class CreateGameDialog extends JDialog
                 if(rdbHostMode.isSelected()) {
                     int portNb = 0;
                     lobbyPtr.StartGameServer(txtBezeichnung.getText(), portNb);
-                }
-                else if(rdbIPMode.isSelected()) {
-                    String ip = JOptionPane.showInputDialog("Enter remote IP:");
-                    String port = JOptionPane.showInputDialog("Enter Port Nb:");
-                    // connect
                 }
                 else if(rdbAIMode.isSelected()) {
                     // start AI
