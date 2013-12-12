@@ -206,4 +206,19 @@ public class Game {
     public void registerGUI(IGameGUI gui) {
         this.gui = gui;
     }
+    
+    public void updateLayout()
+    {
+        this.gui.updateLayout();
+    }
+    
+    public Ship getShipToPlace()
+    {
+        return this.toPlace;
+    }
+    
+    public eOrientation getSelectedOrientation()
+    {
+        return this.gui.getOrientation();
+    }
 }

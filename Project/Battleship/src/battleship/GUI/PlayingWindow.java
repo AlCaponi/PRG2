@@ -13,18 +13,24 @@ import battleship.Network.Message;
 import battleship.Network.eGameState;
 import battleship.Network.eMessageType;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 /**
  *
@@ -38,7 +44,11 @@ public class PlayingWindow extends JFrame implements IGameGUI {
     JPanel bottomPanel;
     BattleFieldGrid playerGrid;
     BattleFieldGrid oponentGrid;
+    JComboBox cmbAvailableShips;
     Game game;
+    JRadioButton rdbHorizontal;
+    JRadioButton rdbVertical;
+    ButtonGroup btnGroupOrientation;
 
     public PlayingWindow(Game game) {
         this.game = game;
@@ -49,15 +59,16 @@ public class PlayingWindow extends JFrame implements IGameGUI {
         buildPanels();
         gameSetup();
         setVisible(true);
-        testEdit();
+        //testEdit();
     }
 
     private void buildPanels() {
-        leftPanel = new JPanel(new GridLayout(0, 1));
+        leftPanel = new JPanel();
+        leftPanel.setLayout(new GridLayout(3,1));
         rigthPanel = new JPanel(new GridLayout(0, 1));
         centerPanel = new JPanel(new GridLayout(0, 2, 5, 15));
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
         add(leftPanel, BorderLayout.WEST);
         add(rigthPanel, BorderLayout.EAST);
         add(centerPanel, BorderLayout.CENTER);
@@ -80,11 +91,84 @@ public class PlayingWindow extends JFrame implements IGameGUI {
 
             }
         });
+        
+        JButton btnResetShips = new JButton("Reset");
+        btnResetShips.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                resetShips(e);
+            }
+        });
+        
+        cmbAvailableShips = new JComboBox();
+        this.game.setShipToPlace(new Ship(eShipType.aircraftcarrier));
+        cmbAvailableShips.addItem(new Ship(eShipType.aircraftcarrier));
+        cmbAvailableShips.addItem(new Ship(eShipType.battleship));
+        cmbAvailableShips.addItem(new Ship(eShipType.destroyer));
+        cmbAvailableShips.addItem(new Ship(eShipType.patrolboat));
+        cmbAvailableShips.addItem(new Ship(eShipType.submarine));
+        
+        cmbAvailableShips.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                cmbAvailableShips_SelectedChanged(e);
+            }
+        });
+        leftPanel.add(cmbAvailableShips);
+        
+        rdbHorizontal = new JRadioButton();
+        rdbHorizontal.setText("Horizontal");
+        rdbHorizontal.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                rdbHorizontal_checkedChanged(e);
+            }
+        });
+        
+        rdbVertical = new JRadioButton();
+        rdbVertical.setText("Vertical");
+        rdbVertical.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                rdbVertical_checkedChanged(e);
+            }
+        });
+        rdbVertical.setSelected(true);
+        
+        btnGroupOrientation = new ButtonGroup();
+        btnGroupOrientation.add(rdbHorizontal);
+        btnGroupOrientation.add(rdbVertical);
+        
+        leftPanel.add(rdbHorizontal);
+        leftPanel.add(rdbVertical);
+
         oponentGrid = new BattleFieldGrid(game, false);
         centerPanel.add(playerGrid);
         centerPanel.add(oponentGrid);
         bottomPanel.add(buttonApplyShips);
-
+        bottomPanel.add(btnResetShips);
+    }
+    
+    private void cmbAvailableShips_SelectedChanged(ActionEvent e) 
+    {
+        Ship selectedShip = (Ship) cmbAvailableShips.getSelectedItem();
+        this.game.setShipToPlace(selectedShip);
+        playerGrid.UpdateLayout();
+    }
+    
+    private void rdbHorizontal_checkedChanged(ActionEvent e)
+    {
+        this.game.getShipToPlace().setOrientation(eOrientation.Horizontal);
+    }
+    
+    
+    private void rdbVertical_checkedChanged(ActionEvent e)
+    {
+        this.game.getShipToPlace().setOrientation(eOrientation.Vertical);
     }
 
     /**
@@ -181,6 +265,12 @@ public class PlayingWindow extends JFrame implements IGameGUI {
         playerGrid.UpdateLayout();
     }
 
+    @Override
+    public void updateLayout() {
+        playerGrid.UpdateLayout();
+        cmbAvailableShips.removeItem(game.getShipToPlace());
+    }
+
     class WindowListerner extends WindowAdapter {
 
         @Override
@@ -192,5 +282,21 @@ public class PlayingWindow extends JFrame implements IGameGUI {
             //game.getOpenent().sendMessage(abortMessage);
             System.exit(0);
         }
+    }
+    
+    public eOrientation getOrientation()
+    {
+        if(rdbHorizontal.isSelected())
+        {
+            return eOrientation.Horizontal;
+        }
+        return eOrientation.Vertical;
+    }
+    
+    public void resetShips(ActionEvent e)
+    {
+        playerGrid = new BattleFieldGrid(game, true);
+        
+        playerGrid.UpdateLayout();
     }
 }

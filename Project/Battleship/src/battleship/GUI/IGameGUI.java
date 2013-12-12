@@ -4,6 +4,7 @@
  */
 package battleship.GUI;
 
+import battleship.Engine.eOrientation;
 import battleship.Network.eGameState;
 
 /**
@@ -15,4 +16,6 @@ public interface IGameGUI {
     
     void updateGameState(eGameState state);
     void addChatMessage(String message);
+    void updateLayout();
+    eOrientation getOrientation();
 }
