@@ -8,7 +8,7 @@ package battleship.Engine;
  *
  * @author Simon
  */
-public class Coordinates {
+public class Coordinates implements java.io.Serializable{
 
     public Coordinates() {
     }
