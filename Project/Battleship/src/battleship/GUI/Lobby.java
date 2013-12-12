@@ -109,8 +109,12 @@ public class Lobby extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) {
                 String ip = JOptionPane.showInputDialog("Enter remote IP:");
-                InetAddress adr = InetAddress.getByName(ip);
-                JoinGame(adr);
+                try {
+                    InetAddress adr = InetAddress.getByName(ip);
+                    JoinGame(adr);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         });
         pnlButtons.add(btnJoinGame, BorderLayout.EAST);
