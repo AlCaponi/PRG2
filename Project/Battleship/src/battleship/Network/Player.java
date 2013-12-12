@@ -17,7 +17,8 @@ public class Player extends Thread implements IClient {
     private boolean isHit = true;
     private boolean isClient = false;
     private int port = 45678;
-    private Thread thread;
+    private Thread thread;    
+    
     private InetAddress ipAddress;
 
     private ServerSocket serverSocket;
