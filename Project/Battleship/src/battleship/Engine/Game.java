@@ -6,6 +6,7 @@ import battleship.Network.AI;
 import battleship.Network.IClient;
 import battleship.Network.Message;
 import battleship.Network.MessageFactory;
+import battleship.Network.Player;
 import battleship.Network.eGameState;
 import battleship.Network.eMessageType;
 import battleship.Network.ePlayerState;
@@ -190,6 +191,15 @@ public class Game {
                 }
             } else {
                 // to check if this is the host else send a switch turn
+                Player p = (Player)oponent;
+                if(p.isHost()) {
+                    if(gui != null) {
+                        gui.updateState(eBattleFieldMode.Playable);
+                    }
+                    else {
+                        sendPlayerState(ePlayerState.TurnSwitch);
+                    }
+                }
             }
         }
         return false;
