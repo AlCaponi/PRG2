@@ -192,13 +192,13 @@ public class Game {
                 }
             } else {
                 // to check if this is the host else send a switch turn
-                while(oponent.getPlayerState() != ePlayerState.Ready) 
+                while(oponent.getPlayerState() != ePlayerState.Ready) {
                     try {
                         Thread.sleep(100);
                     } catch(Exception e) {
                         System.out.println(e.getMessage());
                     }
-            
+                }
                 Player p = (Player)oponent;
                 if(p.isHost()) {
                     if(gui != null) {
