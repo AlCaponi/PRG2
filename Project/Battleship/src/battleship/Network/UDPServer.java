@@ -18,7 +18,6 @@ public class UDPServer implements Runnable {
     public static String initCode = "Battleship";
     public boolean running;
     public String gameName;
-    public int tcpPortNb;
     public Lobby lobbyPtr;
     private Timer responseListenTimer;
     private DatagramSocket socket;
@@ -38,14 +37,13 @@ public class UDPServer implements Runnable {
             
     }
     
-    public void startServer(String gameName, int portNb) {
+    public void startServer(String gameName) {
         // start as broadcast listener
         if(running)
             return;
         
         running = true;
         this.gameName = gameName;
-        this.tcpPortNb = portNb;
         start(); 
     }
     
@@ -99,7 +97,7 @@ public class UDPServer implements Runnable {
                 String infoString = new String(data);
                 if(infoString.startsWith(initCode)) {
                     // return Ready
-                    String dataStr = tcpPortNb + ":" + gameName;
+                    String dataStr = gameName;
                     data = dataStr.getBytes();
                     packet = new DatagramPacket(data, data.length, address, port);
                     socket.send(packet);

@@ -1,12 +1,14 @@
 package battleship.Network;
 
 import battleship.Engine.Game;
+import battleship.GUI.Lobby;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -15,7 +17,8 @@ public class Player extends Thread implements IClient {
         private boolean isHit = true;
         private int port = 45678;
         private Thread thread;
-
+        private InetAddress ipAddress;
+        
         private ServerSocket serverSocket;
         private Socket clientSocket;
 
@@ -27,7 +30,9 @@ public class Player extends Thread implements IClient {
         
         private Socket connectionSocket;
 
-        private Game game;
+        private Game game;        
+        
+    private Lobby lobby;
 
         public Player()
         {            
@@ -53,7 +58,8 @@ public class Player extends Thread implements IClient {
             return opponentready;
         }
         
-        public boolean host() {
+        public boolean host(Lobby alobby) {
+            this.lobby = alobby;
             waitforclient = true;
             ishost = true;
             try {
@@ -67,7 +73,7 @@ public class Player extends Thread implements IClient {
             return true;
         }
         
-        public synchronized boolean connect(String ipadr, int port) {
+        public synchronized boolean connect(InetAddress ipadr) {
             ishost = false;
             try {
                 clientSocket = new Socket(ipadr, port);
@@ -86,6 +92,10 @@ public class Player extends Thread implements IClient {
             System.out.println("verbunden mit: "+clientSocket.getInetAddress());
             playing = true;
             return true;
+        }
+        
+        public InetAddress getInetAddress(){
+            return ipAddress;
         }
         
         public void disconnect() throws IOException {
@@ -110,7 +120,10 @@ public class Player extends Thread implements IClient {
                                 
                                 objectReader = new ObjectInputStream(connectionSocket.getInputStream());
                                 objectWriter = new ObjectOutputStream(connectionSocket.getOutputStream());
-            
+                                
+                                //Startgame
+                                lobby.StartGame(this);
+                                
                               /*  inReader = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                                 outStream = new DataOutputStream(connectionSocket.getOutputStream());*/
                                 System.out.println("Client connection accepted from: "+connectionSocket.getInetAddress());
