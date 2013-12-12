@@ -37,6 +37,7 @@ public class Player extends Thread implements IClient {
         public Player()
         {            
             ishost = false;
+            start();
         }
 	public Socket getSender() {
 		return clientSocket;
