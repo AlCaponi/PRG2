@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -67,7 +68,7 @@ public class Player extends Thread implements IClient {
             return true;
         }
         
-        public synchronized boolean connect(String ipadr, int port) {
+        public synchronized boolean connect(InetAddress ipadr) {
             ishost = false;
             try {
                 clientSocket = new Socket(ipadr, port);
@@ -110,9 +111,8 @@ public class Player extends Thread implements IClient {
                                 
                                 objectReader = new ObjectInputStream(connectionSocket.getInputStream());
                                 objectWriter = new ObjectOutputStream(connectionSocket.getOutputStream());
-
-                                                                                              
-            
+                                
+                                
                               /*  inReader = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                                 outStream = new DataOutputStream(connectionSocket.getOutputStream());*/
                                 System.out.println("Client connection accepted from: "+connectionSocket.getInetAddress());
@@ -155,7 +155,7 @@ public class Player extends Thread implements IClient {
             game.handleOponentMessage(message);
         }*/
         
-        private void process(String data) {
+  /*      private void process(String data) {
             if(data == null) {
                 return;
             }
@@ -219,11 +219,11 @@ public class Player extends Thread implements IClient {
 
         public void sendMessage(String aMessage){
             sendData("5:"+aMessage);
-        }
+        }*/
 
 
 
-        private void sendData(String senddata) {
+        /*private void sendData(String senddata) {
             System.out.println("Send TCP Data: "+senddata);
             try {
                 outStream.writeBytes(senddata + '\n');
@@ -231,7 +231,7 @@ public class Player extends Thread implements IClient {
             } catch (IOException ex) {
                 System.out.println("TCPNetwork Exception: "+ex.getMessage());
             }
-        }
+        }*/
 
         public void close() {
             if(running == true) {
@@ -271,14 +271,12 @@ public class Player extends Thread implements IClient {
     @Override
     public void sendMessage(Message message) {
         try {
-        objectWriter.writeObject(message);
-        objectWriter.flush();
+            objectWriter.writeObject(message);
+            objectWriter.flush();
         }
         catch (Exception e){
             System.out.println("Exception: sendMessage " + e.getMessage());
-        }
-        //von game wird sendMessage aufgerufen
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }                
     }
 
     
