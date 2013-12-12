@@ -4,6 +4,7 @@
  */
 package battleship.GUI;
 
+import battleship.Network.UDPServer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -12,6 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Set;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +35,10 @@ public class Lobby extends JFrame
     private List lstGames;
     private JButton btnCreateGame;
     private JButton btnJoinGame;
+    private JButton btnRefresh;
+    private HashMap<InetAddress,String> gameList;
+    private UDPServer broadcastServer;
+    private UDPServer responseServer;
     
     public Lobby()
     {
@@ -39,6 +47,11 @@ public class Lobby extends JFrame
         
         //Initialize Components
         InitializeComponents();
+        
+        // UDP servers
+        broadcastServer = new UDPServer(this, true);
+        responseServer = new UDPServer(this, false);
+        gameList = new HashMap<>();
     }
 
     private void InitializeComponents() 
@@ -78,6 +91,18 @@ public class Lobby extends JFrame
         btnJoinGame.setSize(50, 250);
         pnlButtons.add(btnJoinGame, BorderLayout.EAST);
         
+        // Button Refresh List
+        btnRefresh = new JButton("Refresh List using Broadcast");
+        btnRefresh.setSize(50, 250);
+        btnRefresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PerformBroadcast();
+            }
+        });
+        pnlButtons.add(btnRefresh, BorderLayout.SOUTH);
+        
+        
         //Set visibility
         setVisible(true);
         
@@ -85,6 +110,39 @@ public class Lobby extends JFrame
     
     public void btnCreateGame_clicked(ActionEvent e)
     {
-        CreateGameDialog createGameDialog = new CreateGameDialog();
+        CreateGameDialog createGameDialog = new CreateGameDialog(this);
+    }
+    
+    public void HandleUDPResponse(InetAddress address, String gameName)
+    {
+        gameList.put(address, gameName);
+        UpdateGameList();
+    }
+    
+    public void UpdateGameList() {
+        lstGames.removeAll();
+        Set<InetAddress> set = gameList.keySet();
+        for(InetAddress adr : set)
+        {
+            String entry = adr.toString() + " " + gameList.get(adr);
+            lstGames.add(entry);
+        }
+    }
+    
+    public void StartGameServer(String gameName, int portNb)
+    {
+        if(broadcastServer.running)
+            broadcastServer.stopServer();
+        
+        broadcastServer.startServer(gameName, portNb);
+    }
+    
+    public void PerformBroadcast()
+    {
+        if(!responseServer.running) {
+            gameList.clear();
+            UpdateGameList();
+        }
+        responseServer.startServerBroadcast(); 
     }
 }

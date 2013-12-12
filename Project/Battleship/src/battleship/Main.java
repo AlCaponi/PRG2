@@ -12,6 +12,7 @@ import battleship.GUI.Lobby;
 import battleship.GUI.PlayingWindow;
 import battleship.Network.AI;
 import battleship.Network.IClient;
+import battleship.Network.UDPServer;
 
 /**
  *
@@ -33,6 +34,5 @@ public class Main {
         //Set up game
         PlayingWindow wnd = new PlayingWindow(game);
         Lobby l = new Lobby();
-        
     }
 }
