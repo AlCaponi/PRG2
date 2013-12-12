@@ -15,6 +15,7 @@ import java.net.Socket;
 public class Player extends Thread implements IClient {
     private boolean running, ishost, playing, opponentready, waitforclient;
     private boolean isHit = true;
+    private boolean isClient = false;
     private int port = 45678;
     private Thread thread;
     private InetAddress ipAddress;
@@ -78,18 +79,20 @@ public class Player extends Thread implements IClient {
         ishost = false;
         try {
             clientSocket = new Socket(ipadr, port);
+            isClient = true;
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
             return false;
         }
-        try {
+        /*try {
+            
             objectReader = new ObjectInputStream(clientSocket.getInputStream());
-            objectWriter = new ObjectOutputStream(clientSocket.getOutputStream());
+            objectWriter = new ObjectOutputStream(clientSocket.getOutputStream());*/
             /*   inReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             outStream = new DataOutputStream(clientSocket.getOutputStream());*/
-        } catch (IOException ex) {
+        /*} catch (IOException ex) {
             System.out.println("TCP Thread Exception: "+ex.getMessage());
-        }
+        }*/
         System.out.println("verbunden mit: "+clientSocket.getInetAddress());
         playing = true;
         return true;
@@ -115,10 +118,16 @@ public class Player extends Thread implements IClient {
             while(running) {
                 Thread.sleep(10);
                 if(playing == true) {
+                    if (isClient == true){
+                            objectReader = new ObjectInputStream(clientSocket.getInputStream());
+                            objectWriter = new ObjectOutputStream(clientSocket.getOutputStream());
+                            isClient = false;
+                    }
+                    
                     if(ishost == true) {
                         if(waitforclient == true) {
                             connectionSocket = serverSocket.accept();
-
+                            
                             objectReader = new ObjectInputStream(connectionSocket.getInputStream());
                             objectWriter = new ObjectOutputStream(connectionSocket.getOutputStream());
 
