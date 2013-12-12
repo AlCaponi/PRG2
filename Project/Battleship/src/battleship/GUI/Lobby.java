@@ -18,10 +18,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashSet;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -172,6 +174,47 @@ public class Lobby extends JFrame
         });
         pnlButtons.add(btnRefreshIP, BorderLayout.SOUTH);
         
+        // Button Join Game Through IP
+        btnJoinGameIP = new JButton("Join Game Through IP");
+        btnJoinGameIP.setSize(50, 250);
+        btnJoinGameIP.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String ip = JOptionPane.showInputDialog("Enter remote IP:");
+                try {
+                    InetAddress adr = InetAddress.getByName(ip);
+                    JoinGame(adr);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+        });
+        pnlButtons.add(btnJoinGameIP, BorderLayout.EAST);
+        
+        // Button Start Game with AI
+        btnJoinGameAI = new JButton("Start Game with AI");
+        btnJoinGameAI.setSize(50, 250);
+        btnJoinGameAI.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IClient oponent = new AI();
+                StartGame(oponent);
+            }
+        });
+        pnlButtons.add(btnJoinGameAI, BorderLayout.EAST);
+        
+        
+        // Button Refresh List
+        btnRefresh = new JButton("Refresh List using Broadcast");
+        btnRefresh.setSize(50, 250);
+        btnRefresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PerformBroadcast();
+            }
+        });
+        pnlButtons.add(btnRefresh, BorderLayout.SOUTH);
+                
         //Set visibility
         setVisible(true);
         

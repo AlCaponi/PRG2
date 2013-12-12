@@ -38,4 +38,8 @@ public interface IBattleField {
     Field[][] getFields();
 
     void applyShipPositions();
+    
+    void resetFields();
+    
+ 
 }
