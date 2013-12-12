@@ -99,7 +99,7 @@ public class UDPServer implements Runnable {
                 String infoString = new String(data);
                 if(infoString.startsWith(initCode)) {
                     // return Ready
-                    String dataStr = tcpPortNb + ":" + gameName;
+                    String dataStr = gameName;
                     data = dataStr.getBytes();
                     packet = new DatagramPacket(data, data.length, address, port);
                     socket.send(packet);
