@@ -4,6 +4,7 @@
  */
 package battleship.GUI;
 
+import battleship.Engine.Coordinates;
 import battleship.Engine.Field;
 import battleship.Engine.Game;
 import battleship.Engine.IBattleField;
@@ -32,7 +33,6 @@ public class GuiField extends JButton {
         this.battleField = battleField;
         this.game = game;
         this.field = field;
-        this.positionX = x;
         this.positionX = x;
         this.positionY = y;
         this.addActionListener(new FieldListener());
@@ -104,11 +104,13 @@ public class GuiField extends JButton {
         public void actionPerformed(ActionEvent e) {
             if (mode == eBattleFieldMode.Playable) {
                 game.sendAttackRequest(positionX, positionY);
-
             } else if (mode == eBattleFieldMode.Design) {
-                
-                if(game.placeCurrentShip()== false)
-                    showMessage("Ship couldn't be placed");
+                game.getShipToPlace().setStartPoint(new Coordinates(positionX, positionY));
+                game.getShipToPlace().setOrientation(game.getSelectedOrientation());
+                if(game.placeCurrentShip())
+                {
+                    game.updateLayout();
+                }   
             } else {
                 throw new UnsupportedOperationException("Field mustn't be enabled, worng mode");
             }

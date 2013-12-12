@@ -190,4 +190,11 @@ public class BattleField implements IBattleField {
     public Field[][] getFields() {
         return fields;
     }
+    
+    
+    @Override
+    public void resetFields()
+    {
+        initFields();
+    }
 }

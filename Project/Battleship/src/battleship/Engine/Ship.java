@@ -102,6 +102,12 @@ public class Ship {
 //        }
         return true;
     }
+    
+    @Override
+    public String toString()
+    {
+        return this.type.name() + " " + this.size;
+    }
 
     public boolean Cross(Ship other) {
         boolean cross = false;
@@ -130,7 +136,7 @@ public class Ship {
         return coordinates;
     }
     
-        public void setFieldReference(Field field)
+    public void setFieldReference(Field field)
     {
         getFields().add(field);
     }
