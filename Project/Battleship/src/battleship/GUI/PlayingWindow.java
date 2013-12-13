@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -42,7 +43,6 @@ import javax.swing.JRadioButton;
 
 import javax.swing.JTextField;
 
-
 /**
  *
  * @author Simon
@@ -56,10 +56,8 @@ public class PlayingWindow extends JFrame implements IGameGUI {
     BattleFieldGrid playerGrid;
     BattleFieldGrid oponentGrid;
     JComboBox cmbAvailableShips;
-
     JTextField chatInput;
-    JList chatOutput;
-
+    List chatOutput;
     Game game;
     JRadioButton rdbHorizontal;
     JRadioButton rdbVertical;
@@ -79,11 +77,11 @@ public class PlayingWindow extends JFrame implements IGameGUI {
 
     private void buildPanels() {
         leftPanel = new JPanel();
-        leftPanel.setLayout(new GridLayout(3,1));
+        leftPanel.setLayout(new GridLayout(3, 1));
         rigthPanel = new JPanel(new GridLayout(0, 1));
         centerPanel = new JPanel(new GridLayout(0, 2, 5, 15));
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
+        bottomPanel.setLayout(new BorderLayout());
         add(leftPanel, BorderLayout.WEST);
         add(rigthPanel, BorderLayout.EAST);
         add(centerPanel, BorderLayout.CENTER);
@@ -106,16 +104,15 @@ public class PlayingWindow extends JFrame implements IGameGUI {
 
             }
         });
-        
+
         JButton btnResetShips = new JButton("Reset");
-        btnResetShips.addActionListener(new ActionListener(){
+        btnResetShips.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 resetShips(e);
             }
         });
-        
+
         cmbAvailableShips = new JComboBox();
         this.game.setShipToPlace(new Ship(eShipType.aircraftcarrier));
         cmbAvailableShips.addItem(new Ship(eShipType.aircraftcarrier));
@@ -123,83 +120,89 @@ public class PlayingWindow extends JFrame implements IGameGUI {
         cmbAvailableShips.addItem(new Ship(eShipType.destroyer));
         cmbAvailableShips.addItem(new Ship(eShipType.patrolboat));
         cmbAvailableShips.addItem(new Ship(eShipType.submarine));
-        
-        cmbAvailableShips.addActionListener(new ActionListener(){
+
+        cmbAvailableShips.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 cmbAvailableShips_SelectedChanged(e);
             }
         });
         leftPanel.add(cmbAvailableShips);
-        
+
         rdbHorizontal = new JRadioButton();
         rdbHorizontal.setText("Horizontal");
-        rdbHorizontal.addActionListener(new ActionListener(){
+        rdbHorizontal.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 rdbHorizontal_checkedChanged(e);
             }
         });
-        
+
         rdbVertical = new JRadioButton();
         rdbVertical.setText("Vertical");
-        rdbVertical.addActionListener(new ActionListener(){
+        rdbVertical.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 rdbVertical_checkedChanged(e);
             }
         });
         rdbVertical.setSelected(true);
-        
+
         btnGroupOrientation = new ButtonGroup();
         btnGroupOrientation.add(rdbHorizontal);
         btnGroupOrientation.add(rdbVertical);
-        
+
         leftPanel.add(rdbHorizontal);
         leftPanel.add(rdbVertical);
         JButton buttonChat = new JButton("Send");
         buttonChat.addActionListener(
                 new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 game.sendChatMessage(chatInput.getText());
-                chatInput.setText("");  
-                
+                chatInput.setText("");
+
             }
-        }
-                );
-        chatOutput = new JList();
+        });
+        chatOutput = new List();
         chatInput = new JTextField();
         oponentGrid = new BattleFieldGrid(game, false);
         centerPanel.add(playerGrid);
         centerPanel.add(oponentGrid);
-        bottomPanel.add(buttonApplyShips);
+        //left
+        JPanel bottomLeft = new JPanel();
+        bottomLeft.setLayout(new BoxLayout(bottomLeft, BoxLayout.Y_AXIS));
 
-        bottomPanel.add(chatOutput);
-        bottomPanel.add(chatInput);
-        bottomPanel.add(buttonChat);
-        bottomPanel.add(btnResetShips);
+        bottomLeft.add(buttonApplyShips);
+        bottomLeft.add(btnResetShips);
+
+        JPanel bottomCenter = new JPanel();
+        bottomCenter.setLayout(new BoxLayout(bottomCenter, BoxLayout.Y_AXIS));
+        bottomCenter.add(chatOutput);
+        bottomCenter.add(chatInput);
+
+        JPanel bottomRigth = new JPanel();
+        bottomRigth.setLayout(new BoxLayout(bottomRigth, BoxLayout.Y_AXIS));
+        bottomRigth.add(buttonChat);
+
+        bottomPanel.add(bottomLeft, BorderLayout.WEST);
+        bottomPanel.add(bottomCenter, BorderLayout.CENTER);
+        bottomPanel.add(bottomRigth, BorderLayout.EAST);
+
+
     }
-    
-    private void cmbAvailableShips_SelectedChanged(ActionEvent e) 
-    {
+
+    private void cmbAvailableShips_SelectedChanged(ActionEvent e) {
         Ship selectedShip = (Ship) cmbAvailableShips.getSelectedItem();
         this.game.setShipToPlace(selectedShip);
         playerGrid.UpdateLayout();
     }
-    
-    private void rdbHorizontal_checkedChanged(ActionEvent e)
-    {
+
+    private void rdbHorizontal_checkedChanged(ActionEvent e) {
         this.game.getShipToPlace().setOrientation(eOrientation.Horizontal);
     }
-    
-    
-    private void rdbVertical_checkedChanged(ActionEvent e)
-    {
+
+    private void rdbVertical_checkedChanged(ActionEvent e) {
         this.game.getShipToPlace().setOrientation(eOrientation.Vertical);
 
 
@@ -250,16 +253,17 @@ public class PlayingWindow extends JFrame implements IGameGUI {
                 ImageIcon winIcon = new ImageIcon(PlayingWindow.class.getResource("win.gif"));
                 JOptionPane.showMessageDialog(this.getParent(), "", "congratulation!!!", JOptionPane.INFORMATION_MESSAGE, winIcon);
                 break;
-            case lost:                
+            case lost:
                 ImageIcon lostIcon = new ImageIcon(PlayingWindow.class.getResource("lost.gif"));
                 JOptionPane.showMessageDialog(this.getParent(), "", "LOOSER", JOptionPane.INFORMATION_MESSAGE, lostIcon);
                 break;
         }
-    }    
+    }
 
     @Override
     public void addChatMessage(String message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        chatOutput.add(message);
+       
     }
 
     private void testEdit() {
@@ -301,8 +305,7 @@ public class PlayingWindow extends JFrame implements IGameGUI {
     public void updateLayout() {
         playerGrid.UpdateLayout();
         oponentGrid.UpdateLayout();
-        if(cmbAvailableShips.getItemCount() > 0)
-        {
+        if (cmbAvailableShips.getItemCount() > 0) {
             cmbAvailableShips.removeItem(game.getShipToPlace());
         }
     }
@@ -319,20 +322,17 @@ public class PlayingWindow extends JFrame implements IGameGUI {
             System.exit(0);
         }
     }
-    
-    public eOrientation getOrientation()
-    {
-        if(rdbHorizontal.isSelected())
-        {
+
+    public eOrientation getOrientation() {
+        if (rdbHorizontal.isSelected()) {
             return eOrientation.Horizontal;
         }
         return eOrientation.Vertical;
     }
-    
-    public void resetShips(ActionEvent e)
-    {
+
+    public void resetShips(ActionEvent e) {
         playerGrid = new BattleFieldGrid(game, true);
-        
+
         playerGrid.UpdateLayout();
     }
 }
