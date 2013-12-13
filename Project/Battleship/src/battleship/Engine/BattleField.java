@@ -70,9 +70,9 @@ public class BattleField implements IBattleField {
         boolean canPlace = true;
         //1. check if its still in the field
         if (shipToPlace.getOrientation() == eOrientation.Horizontal) {
-            canPlace = shipToPlace.getStartPoint().getX() + shipToPlace.getSize() < width;
+            canPlace = shipToPlace.getStartPoint().getX() + shipToPlace.getSize() <= width;
         } else {
-            canPlace = shipToPlace.getStartPoint().getY() + shipToPlace.getSize() < heigth;
+            canPlace = shipToPlace.getStartPoint().getY() + shipToPlace.getSize() <= heigth;
         }
         if (canPlace == false) {
             return canPlace;
