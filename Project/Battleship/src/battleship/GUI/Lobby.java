@@ -223,8 +223,17 @@ public class Lobby extends JFrame
     public void JoinGame(InetAddress adr)
     {
         Player player = new Player();
-        player.connect(adr);
-        StartGame(player);
+        if(player.connect(adr)){
+            StartGame(player);
+        } else {
+            JOptionPane.showMessageDialog(null, "Could not connect to: "+adr, "IP conflict", WIDTH);
+            try{
+                player.disconnect();
+            }
+            catch (Exception e) {
+                System.out.println("Exception Lobby player.disconnect(): "+e.getMessage());
+            }
+        }
     }
     
     public void StartGame(IClient oponent)

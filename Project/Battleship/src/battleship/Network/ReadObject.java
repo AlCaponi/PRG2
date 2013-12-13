@@ -38,7 +38,7 @@ public class ReadObject extends Thread {
             }
             }
         } catch(Exception e) {
-            System.out.println("TCPNetwork Exception: WriteObject"+e.getMessage());
+            System.out.println("TCPNetwork Exception ReadObject: "+e.getMessage());
         }
     }
    
