@@ -5,9 +5,7 @@
 package battleship.Network;
 
 import battleship.Engine.Game;
-import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
