@@ -99,13 +99,20 @@ public class BattleField implements IBattleField {
     public boolean hitField(int x, int y) {
 
         Field tolook = getFields()[y][x];
-        if (tolook.getFieldState() == eFieldState.Empty) {
-            tolook.setBattleState(eFieldBattleState.Missed);
-            return false;
-        } else {
-            tolook.setBattleState(eFieldBattleState.Hit);
-            setHitCount();
-            return true;
+        if(tolook.getBattleState() == null)
+        {
+            if (tolook.getFieldState() == eFieldState.Empty) {
+                tolook.setBattleState(eFieldBattleState.Missed);
+                return false;
+            } else {
+                tolook.setBattleState(eFieldBattleState.Hit);
+                setHitCount();
+                return true;
+            }
+        }
+        else
+        {
+        throw new UnknownError("Du domme siech hesch scho mou do druf gschosse" + x + " " + y);
         }
     }
 

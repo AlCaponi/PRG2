@@ -8,20 +8,23 @@ import battleship.Engine.Ship;
 import battleship.Engine.eOrientation;
 import battleship.Engine.eShipType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AI implements IClient {
 
     Game game;
     IBattleField field;
-    ArrayList<Coordinates> alreadyHit;
+    HashSet<Coordinates> alreadyHit;
     private Coordinates lastAttack;
     boolean lastAttackResult = false;
     AttackStrategie strategie;
     private ePlayerState state;
 
     public AI() {
-        alreadyHit = new ArrayList<>();
+        alreadyHit = new HashSet<>();
         field = new BattleField(10, 10);
 
     }
@@ -69,7 +72,11 @@ public class AI implements IClient {
                     // just wait for first input
                     //game.handleOponentMessage(new MessageFactory<ePlayerState>().createMessage(eMessageType.playerState, ePlayerState.TurnSwitch));
                 } else if (playerStateMessage.getDataContainer() == ePlayerState.TurnSwitch) {
-                    AITurn();
+            try {
+                AITurn();
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(AI.class.getName()).log(Level.SEVERE, null, ex);
+            }
                 }
                 break;
             case chat:
@@ -116,7 +123,7 @@ public class AI implements IClient {
         game.handleOponentMessage(ready);
     }
 
-    private void AITurn() {
+    private void AITurn() throws CloneNotSupportedException {
 
         Coordinates toHit = new Coordinates();
         do {
@@ -138,6 +145,7 @@ public class AI implements IClient {
             }
 
         } while (alreadyHit.contains(toHit));
+        alreadyHit.add(toHit);
         // to do
         // hit field with coordinates
         lastAttack = toHit;
@@ -179,7 +187,7 @@ public class AI implements IClient {
             direction = 0;
         }
 
-        public Coordinates getNextAttack(boolean lastDidHit) {
+        public Coordinates getNextAttack(boolean lastDidHit) throws CloneNotSupportedException {
             Coordinates nextToHit = new Coordinates();
 
             //next direction
@@ -205,48 +213,57 @@ public class AI implements IClient {
             return nextToHit;
         }
 
-        private Coordinates getNextCoordinates() {
+        private Coordinates getNextCoordinates() throws CloneNotSupportedException {
 
-
+            try
+            {
+            
+            Coordinates lastHitCopy =  lasthit.clone();
             switch (direction) {
                 case 0:
-                    if (lasthit.getX() == 10) {
+                    if (lasthit.getX() == 9) {
                         return null;
                     }
-                    lasthit.setX(lasthit.getX() + 1);
-                    lasthit.setY(lasthit.getY());
+                    lastHitCopy.setX(lasthit.getX() + 1);
+                    lastHitCopy.setY(lasthit.getY());
                     break;
                 // Left
                 case 1:
                     if (lasthit.getX() == 0) {
                         return null;
                     }
-                    lasthit.setX(lasthit.getX() - 1);
-                    lasthit.setY(lasthit.getY());
+                    lastHitCopy.setX(lasthit.getX() - 1);
+                    lastHitCopy.setY(lasthit.getY());
                     break;
                 //Top
                 case 2:
                     if (lasthit.getY() == 0) {
                         return null;
                     }
-                    lasthit.setX(lasthit.getX());
-                    lasthit.setY(lasthit.getY() - 1);
+                    lastHitCopy.setX(lasthit.getX());
+                    lastHitCopy.setY(lasthit.getY() - 1);
                     break;
                 //Down
                 case 3:
-                    if (lasthit.getY() == 10) {
+                    if (lasthit.getY() == 9) {
                         return null;
                     }
-                    lasthit.setX(lasthit.getX());
-                    lasthit.setY(lasthit.getY() + 1);
+                    lastHitCopy.setX(lasthit.getX());
+                    lastHitCopy.setY(lasthit.getY() + 1);
                     break;
                 default:
                     direction =-1;
                     return null;
 
             }
-
-            return lasthit;
+            lasthit = lastHitCopy;
+            return lastHitCopy;
+            }
+            catch(CloneNotSupportedException asdf)
+            {
+                return null;
+            }
+            
         }
     }
 }
