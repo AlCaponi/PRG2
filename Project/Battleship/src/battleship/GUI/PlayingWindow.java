@@ -161,7 +161,6 @@ public class PlayingWindow extends JFrame implements IGameGUI {
             public void actionPerformed(ActionEvent e) {
                 game.sendChatMessage(chatInput.getText());
                 chatInput.setText("");
-
             }
         });
         chatOutput = new List();
