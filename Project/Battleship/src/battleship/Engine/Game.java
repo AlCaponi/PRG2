@@ -243,10 +243,10 @@ public class Game {
 
     private void playKaboom() {
         try {
-        AudioInputStream audioIn = AudioSystem.getAudioInputStream(Game.class.getResource("kaboom.wav"));
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioIn);
-        clip.start();
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(Game.class.getResource("kaboom.wav"));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            clip.start();
         }
         catch (Exception e){
             System.out.println("playKaboom exception: "+e.getMessage());
@@ -255,13 +255,13 @@ public class Game {
 
     private void playSploosh() {
         try {
-        AudioInputStream audioIn = AudioSystem.getAudioInputStream(Game.class.getResource("sploosh.wav"));
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioIn);
-        clip.start();
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(Game.class.getResource("sploosh.wav"));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            clip.start();
         }
         catch (Exception e){
             System.out.println("Play sound exception: "+e.getMessage());
         }
-    }
+    }    
 }
