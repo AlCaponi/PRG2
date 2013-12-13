@@ -8,7 +8,7 @@ package battleship.Engine;
  *
  * @author Simon
  */
-public class Coordinates implements java.io.Serializable{
+public class Coordinates implements java.io.Serializable, Cloneable{
 
     public Coordinates() {
     }
@@ -68,6 +68,24 @@ public class Coordinates implements java.io.Serializable{
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return this.getX()^this.getY();//To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toString() {
+        return String.format("X:%d Y: %d", this.x, this.y); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+     public Coordinates clone() throws CloneNotSupportedException {
+        return (Coordinates)super.clone();
+    }
+    
+    
+    
+    
     
   
 }

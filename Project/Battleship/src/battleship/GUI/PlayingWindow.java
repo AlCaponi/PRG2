@@ -68,7 +68,7 @@ public class PlayingWindow extends JFrame implements IGameGUI {
         this.game.registerGUI(this);
         setLayout(new BorderLayout());
         setSize(600, 600);
-
+        addWindowListener(new WindowListernerExt());
         buildPanels();
         gameSetup();
         setVisible(true);
@@ -310,17 +310,18 @@ public class PlayingWindow extends JFrame implements IGameGUI {
         }
     }
 
-    class WindowListerner extends WindowAdapter {
+    class WindowListernerExt extends WindowAdapter {
 
         @Override
-        public void windowClosed(WindowEvent e) {
+        public void windowClosing(WindowEvent e) {
             Message abortMessage = new Message();
             abortMessage.setMessageType(eMessageType.gameState);
             abortMessage.setDataContainer(eGameState.abort);
             // Oponent is null at the moment
-            //game.getOpenent().sendMessage(abortMessage);
-            System.exit(0);
-        }
+            game.getOpenent().sendMessage(abortMessage);
+            
+            //System.exit(0);
+        }                
     }
 
     public eOrientation getOrientation() {
@@ -334,5 +335,5 @@ public class PlayingWindow extends JFrame implements IGameGUI {
         playerGrid = new BattleFieldGrid(game, true);
 
         playerGrid.UpdateLayout();
-    }
+    }    
 }
