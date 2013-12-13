@@ -65,6 +65,7 @@ public class Game {
                 Message<Boolean> attackResult = message;
                 openentGrid.setFieldState(attackResult.getDataContainer(), lastAttack.getX(), lastAttack.getY());
                 // switch turns
+                gui.updateLayout();
                 sendPlayerState(ePlayerState.TurnSwitch);
                 break;
             case gameState:
