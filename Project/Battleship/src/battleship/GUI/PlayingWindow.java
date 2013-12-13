@@ -25,6 +25,8 @@ import java.awt.GridLayout;
 import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -165,6 +167,16 @@ public class PlayingWindow extends JFrame implements IGameGUI {
         });
         chatOutput = new List();
         chatInput = new JTextField();
+        chatInput.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent evt) {
+                int key = evt.getKeyCode();
+                if (key == KeyEvent.VK_ENTER) {
+                    game.sendChatMessage(chatInput.getText());
+                    chatInput.setText("");
+                }
+            }
+        });
         oponentGrid = new BattleFieldGrid(game, false);
         centerPanel.add(playerGrid);
         centerPanel.add(oponentGrid);
@@ -262,42 +274,8 @@ public class PlayingWindow extends JFrame implements IGameGUI {
     @Override
     public void addChatMessage(String message) {
         chatOutput.add(message);
-       
-    }
+        chatOutput.select(chatOutput.getItemCount() - 1);
 
-    private void testEdit() {
-        Ship s = new Ship(eShipType.aircraftcarrier);
-        s.setStartPoint(new Coordinates(0, 0));
-        s.setOrientation(eOrientation.Vertical);
-
-        Ship s2 = new Ship(eShipType.battleship);
-        s2.setStartPoint(new Coordinates(5, 4));
-        s2.setOrientation(eOrientation.Vertical);
-
-        Ship s3 = new Ship(eShipType.destroyer);
-        s3.setStartPoint(new Coordinates(6, 2));
-        s3.setOrientation(eOrientation.Vertical);
-
-        Ship s4 = new Ship(eShipType.patrolboat);
-        s4.setStartPoint(new Coordinates(3, 6));
-        s4.setOrientation(eOrientation.Vertical);
-
-        Ship s5 = new Ship(eShipType.submarine);
-        s5.setStartPoint(new Coordinates(5, 8));
-        s5.setOrientation(eOrientation.Horizontal);
-        game.setShipToPlace(s);
-        game.placeCurrentShip();
-        game.setShipToPlace(s2);
-        game.placeCurrentShip();
-        game.setShipToPlace(s3);
-        game.placeCurrentShip();
-        game.setShipToPlace(s4);
-        game.placeCurrentShip();
-        game.setShipToPlace(s5);
-        game.placeCurrentShip();
-
-
-        playerGrid.UpdateLayout();
     }
 
     @Override
@@ -318,9 +296,9 @@ public class PlayingWindow extends JFrame implements IGameGUI {
             abortMessage.setDataContainer(eGameState.abort);
             // Oponent is null at the moment
             game.getOpenent().sendMessage(abortMessage);
-            
+
             //System.exit(0);
-        }                
+        }
     }
 
     public eOrientation getOrientation() {
@@ -334,5 +312,5 @@ public class PlayingWindow extends JFrame implements IGameGUI {
         playerGrid = new BattleFieldGrid(game, true);
 
         playerGrid.UpdateLayout();
-    }    
+    }
 }
