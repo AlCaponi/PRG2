@@ -247,17 +247,15 @@ public class PlayingWindow extends JFrame implements IGameGUI {
                 JOptionPane.showMessageDialog(this.getParent(), "Oponent left the current game");
                 break;
             case won:
-                JOptionPane.showMessageDialog(this.getParent(), "Well done");
+                ImageIcon winIcon = new ImageIcon(PlayingWindow.class.getResource("win.gif"));
+                JOptionPane.showMessageDialog(this.getParent(), "", "congratulation!!!", JOptionPane.INFORMATION_MESSAGE, winIcon);
                 break;
-            case lost:
-                //ImageIcon  yoda = new ImageIcon ("lost.jpg");                
-                //,JOptionPane.ERROR_MESSAGE,(Icon)yoda
-                JOptionPane.showMessageDialog(this.getParent(), "Noch viel zu lernen du hast junger Padavan!");
+            case lost:                
+                ImageIcon lostIcon = new ImageIcon(PlayingWindow.class.getResource("lost.gif"));
+                JOptionPane.showMessageDialog(this.getParent(), "", "LOOSER", JOptionPane.INFORMATION_MESSAGE, lostIcon);
                 break;
         }
-
-
-    }
+    }    
 
     @Override
     public void addChatMessage(String message) {
