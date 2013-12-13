@@ -10,6 +10,9 @@ import battleship.Network.Player;
 import battleship.Network.eGameState;
 import battleship.Network.eMessageType;
 import battleship.Network.ePlayerState;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 public class Game {
 
@@ -64,6 +67,12 @@ public class Game {
                 // Display on player grid
                 Message<Boolean> attackResult = message;
                 openentGrid.setFieldState(attackResult.getDataContainer(), lastAttack.getX(), lastAttack.getY());
+                if(attackResult.getDataContainer()){
+                    playKaboom();
+                }
+                else{
+                    playSploosh();
+                }
                 // switch turns
                 gui.updateLayout();
                 sendPlayerState(ePlayerState.TurnSwitch);
@@ -230,5 +239,29 @@ public class Game {
     public eOrientation getSelectedOrientation()
     {
         return this.gui.getOrientation();
+    }
+
+    private void playKaboom() {
+        try {
+        AudioInputStream audioIn = AudioSystem.getAudioInputStream(Game.class.getResource("kaboom.wav"));
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioIn);
+        clip.start();
+        }
+        catch (Exception e){
+            System.out.println("playKaboom exception: "+e.getMessage());
+        }
+    }
+
+    private void playSploosh() {
+        try {
+        AudioInputStream audioIn = AudioSystem.getAudioInputStream(Game.class.getResource("sploosh.wav"));
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioIn);
+        clip.start();
+        }
+        catch (Exception e){
+            System.out.println("Play sound exception: "+e.getMessage());
+        }
     }
 }
