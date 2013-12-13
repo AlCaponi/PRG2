@@ -302,7 +302,11 @@ public class PlayingWindow extends JFrame implements IGameGUI {
     @Override
     public void updateLayout() {
         playerGrid.UpdateLayout();
-        cmbAvailableShips.removeItem(game.getShipToPlace());
+        oponentGrid.UpdateLayout();
+        if(cmbAvailableShips.getItemCount() > 0)
+        {
+            cmbAvailableShips.removeItem(game.getShipToPlace());
+        }
     }
 
     class WindowListerner extends WindowAdapter {
