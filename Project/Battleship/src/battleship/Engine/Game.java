@@ -196,6 +196,7 @@ public class Game {
                 if(p.isHost()) {
                     if(gui != null) {
                         gui.updateState(eBattleFieldMode.Playable);
+                        return true;
                     }
                 }
             }
