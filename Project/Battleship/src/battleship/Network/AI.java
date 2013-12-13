@@ -16,6 +16,8 @@ public class AI implements IClient {
     IBattleField field;
     ArrayList<Coordinates> alreadyHit;
     private Coordinates lastAttack;
+    boolean lastAttackResult = false;
+    AttackStrategie strategie;
     private ePlayerState state;
 
     public AI() {
@@ -25,8 +27,10 @@ public class AI implements IClient {
     }
 
     /**
-     * Because AI doesn't use any network protocoll, send message means you "receive" the message
-     * @param message 
+     * Because AI doesn't use any network protocoll, send message means you
+     * "receive" the message
+     *
+     * @param message
      */
     @Override
     public void sendMessage(Message message) {
@@ -47,6 +51,8 @@ public class AI implements IClient {
             case attackResult:
                 // Display on player grid
                 Message<Boolean> attackResult = message;
+                //interpret attakResult
+                lastAttackResult = attackResult.getDataContainer();
                 //field.setFieldState(attackResult.getDataContainer(), lastAttack.getX(), lastAttack.getY());
                 // switch turns
                 game.handleOponentMessage(new MessageFactory<ePlayerState>().createMessage(eMessageType.playerState, ePlayerState.TurnSwitch));
@@ -93,7 +99,7 @@ public class AI implements IClient {
 
             Ship toPlace = shipsToPlace.get(0);
             toPlace.setStartPoint(getRandomCoordinates());
-            eOrientation orient = toPlace.getStartPoint().getX() % 2 == 0? eOrientation.Horizontal:eOrientation.Vertical;
+            eOrientation orient = toPlace.getStartPoint().getX() % 2 == 0 ? eOrientation.Horizontal : eOrientation.Vertical;
             toPlace.setOrientation(orient);
 
             boolean canPlace = true;
@@ -112,15 +118,29 @@ public class AI implements IClient {
 
     private void AITurn() {
 
-        Coordinates toHit = getRandomCoordinates();
-        while (alreadyHit.contains(toHit)) {
-            toHit = getRandomCoordinates();
-        }
+        Coordinates toHit = new Coordinates();
+        do {
+            // first time hit any ship
+            if (strategie == null && lastAttackResult == true) {
+
+                strategie = new AttackStrategie(lastAttack);
+                toHit = strategie.getNextAttack(lastAttackResult);
+            } // go on with strategie ;)
+            else if (strategie != null) {
+                toHit = strategie.getNextAttack(lastAttackResult);
+                // to do chech if allready in hit fields
+                if (toHit == null) {
+                    strategie = null;
+                    toHit = getRandomCoordinates();
+                }
+            } else {
+                toHit = getRandomCoordinates();
+            }
+
+        } while (alreadyHit.contains(toHit));
         // to do
         // hit field with coordinates
-
         lastAttack = toHit;
-
         Message<Coordinates> hitMessage = new MessageFactory<Coordinates>().createMessage(eMessageType.attack, toHit);
         // game
         game.handleOponentMessage(hitMessage);
@@ -144,5 +164,89 @@ public class AI implements IClient {
     @Override
     public void setState(ePlayerState state) {
         this.state = state;
+    }
+
+    class AttackStrategie {
+
+        private int direction;
+        private Coordinates origin;
+        private Coordinates lasthit;
+
+        public AttackStrategie(Coordinates origin) {
+            this.origin = origin;
+            lasthit = new Coordinates(origin.getX(), origin.getY());
+            // rigth
+            direction = 0;
+        }
+
+        public Coordinates getNextAttack(boolean lastDidHit) {
+            Coordinates nextToHit = new Coordinates();
+
+            //next direction
+            if (lastDidHit == false) {
+                // reset
+                lasthit = new Coordinates(origin.getX(), origin.getY());
+                direction++;
+
+            }
+            
+            do {
+                nextToHit = getNextCoordinates();
+                if(direction != -1&& nextToHit == null)
+                {
+                 direction++;
+                // reset
+                lasthit = new Coordinates(origin.getX(), origin.getY());
+                }
+            }
+            while(nextToHit == null && direction != -1);
+            
+
+            return nextToHit;
+        }
+
+        private Coordinates getNextCoordinates() {
+
+
+            switch (direction) {
+                case 0:
+                    if (lasthit.getX() == 10) {
+                        return null;
+                    }
+                    lasthit.setX(lasthit.getX() + 1);
+                    lasthit.setY(lasthit.getY());
+                    break;
+                // Left
+                case 1:
+                    if (lasthit.getX() == 0) {
+                        return null;
+                    }
+                    lasthit.setX(lasthit.getX() - 1);
+                    lasthit.setY(lasthit.getY());
+                    break;
+                //Top
+                case 2:
+                    if (lasthit.getY() == 0) {
+                        return null;
+                    }
+                    lasthit.setX(lasthit.getX());
+                    lasthit.setY(lasthit.getY() - 1);
+                    break;
+                //Down
+                case 3:
+                    if (lasthit.getY() == 10) {
+                        return null;
+                    }
+                    lasthit.setX(lasthit.getX());
+                    lasthit.setY(lasthit.getY() + 1);
+                    break;
+                default:
+                    direction =-1;
+                    return null;
+
+            }
+
+            return lasthit;
+        }
     }
 }
