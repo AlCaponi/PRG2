@@ -101,7 +101,10 @@ public class Game {
                 break;
             case chat:
                 // display in chat :)
-
+                Message<String> chatMessage = message;
+                if (gui != null) {
+                    gui.addChatMessage(chatMessage.getDataContainer());
+                }
                 break;
         }
     }
