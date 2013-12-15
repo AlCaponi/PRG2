@@ -58,7 +58,15 @@ public class AI implements IClient {
                 lastAttackResult = attackResult.getDataContainer();
                 //field.setFieldState(attackResult.getDataContainer(), lastAttack.getX(), lastAttack.getY());
                 // switch turns
-                game.handleOponentMessage(new MessageFactory<ePlayerState>().createMessage(eMessageType.playerState, ePlayerState.TurnSwitch));
+                if(!attackResult.getDataContainer())
+                    game.handleOponentMessage(new MessageFactory<ePlayerState>().createMessage(eMessageType.playerState, ePlayerState.TurnSwitch));
+                else {
+                    try {
+                       AITurn();
+                    } catch (CloneNotSupportedException ex) {
+                        Logger.getLogger(AI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 break;
             case gameState:
                 // display result

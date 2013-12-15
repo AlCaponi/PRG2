@@ -75,7 +75,13 @@ public class Game {
                 }
                 // switch turns
                 gui.updateLayout();
-                sendPlayerState(ePlayerState.TurnSwitch);
+                if(!attackResult.getDataContainer())
+                    sendPlayerState(ePlayerState.TurnSwitch);
+                else{
+                    if (gui != null) {
+                        gui.updateState(eBattleFieldMode.Playable);
+                    }
+                }
                 break;
             case gameState:
                 // display result
