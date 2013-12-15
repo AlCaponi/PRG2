@@ -92,6 +92,7 @@ public class Lobby extends JFrame
                 if(waitMode) {
                     try {
                         player.disconnect();
+                        broadcastServer.stopServer();
                     } catch(Exception ex) {
                         System.out.println(ex.getMessage());
                     }
