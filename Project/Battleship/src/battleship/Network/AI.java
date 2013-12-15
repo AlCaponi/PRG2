@@ -65,7 +65,7 @@ public class AI implements IClient {
                        AITurn();
                     } catch (CloneNotSupportedException ex) {
                         Logger.getLogger(AI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    } 
                 }
                 break;
             case gameState:
